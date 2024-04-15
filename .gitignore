@@ -1,0 +1,14 @@
+__pycache__
+MRCNN/results
+.DS_Store
+data
+data_crop
+data_crop1
+data_old
+logs
+output
+results
+custom_cancer.py
+mprofile_20240214093349.dat
+test_model_cancer.ipynb
+mask_rcnn_coco.h5
