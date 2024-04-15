@@ -6,7 +6,8 @@ Model pipeline:
 2. crops the ROIs into a folder
 3. applies segmentation to the cropped images
 
-Output: in results/<taskname>/ produces results.csv and one folder per image
+Output: in results/'taskname'/ produces results.csv and one folder per image
+
 Efficiency:
 - Detection: Recall=0.91
 - Classification: Binary CE=0.76
