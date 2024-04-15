@@ -182,6 +182,29 @@ class CustomDataset(utils.Dataset):
         else:
             super(self.__class__, self).image_reference(image_id)
 
+
+def nms_suppression_multi(results,threshold):
+    """Apply non-maximum suppression to avoid multiple detections of the same object"""
+    r = results[0]
+    remove_index = np.array([0]*len(r['rois'])).astype(bool)
+    for i in range(0,len(r['rois'])):
+        for j in range(i+1,len(r['rois'])):
+            if remove_index[i] == 0 and remove_index[j] == 0:
+                iou = np.logical_and(r['masks'][:,:,i].astype(bool),r['masks'][:,:,j].astype(bool)).sum() / np.logical_or(r['masks'][:,:,i].astype(bool),r['masks'][:,:,j].astype(bool)).sum()
+                #print(iou)
+                if iou > threshold:
+                    if r['scores'][i] > r['scores'][j]:
+                        remove_index[j]=1
+                    else:
+                        remove_index[i]=1    
+    new_results = [{'rois':r['rois'][~remove_index],
+                    'masks':r['masks'][:,:,~remove_index],
+                    'class_ids':r['class_ids'][~remove_index],
+                    'scores':r['scores'][~remove_index]}]
+    return new_results
+
+
+
 @profile
 def train(model):
     """Train the model."""
