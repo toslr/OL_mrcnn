@@ -12,7 +12,7 @@ import tensorflow as tf
 from memory_profiler import profile
 
 # Root directory of the project
-ROOT_DIR = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/mrcnn"
+ROOT_DIR = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn"
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Disables GPU
 
@@ -180,12 +180,12 @@ def train(model):
     """Train the model."""
     # Training dataset.
     dataset_train = CustomDataset()
-    dataset_train.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/mrcnn/data_crop", "train")
+    dataset_train.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data_crop", "train")
     dataset_train.prepare()
 
     # Validation dataset
     dataset_val = CustomDataset()
-    dataset_val.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/mrcnn/data_crop", "valid")
+    dataset_val.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data_crop", "valid")
     dataset_val.prepare()
 
     # *** This training schedule is an example. Update to your needs ***
