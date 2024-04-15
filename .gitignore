@@ -1,7 +1,7 @@
 __pycache__
 MRCNN/results
 .DS_Store
-data
+data/train
 data_crop
 data_crop1
 data_old
@@ -11,4 +11,5 @@ results
 custom_cancer.py
 mprofile_20240214093349.dat
 test_model_cancer.ipynb
+docs
 mask_rcnn_coco.h5

@@ -1,7 +1,18 @@
-# Mask-R-CNN-using-Tensorflow2
-Instance Segmentation
+# Mask-R-CNN using Tensorflow2 for OL classification and segmentation
 
-Check this video to understand the code: https://www.youtube.com/watch?v=QP9Nl-nw890
+## OVERVIEW:
+Model pipeline:
+1. takes a .tif image, classifies the OLs and defines ROIs
+2. crops the ROIs into a folder
+3. applies segmentation to the cropped images
 
-![Screenshot 2023-02-18 154952](https://user-images.githubusercontent.com/60029146/219943863-63467d85-db8e-40f8-b712-a31ed89717fb.jpg)
+Output: in results/<taskname>/ produces results.csv and one folder per image
+Efficiency:
+- Detection: Recall=0.91
+- Classification: Binary CE=0.76
+- Segmentation: IoU=0.77
 
+## SETUP FOR IMAGE CROPPER:
+Tested under MacOS but should be working under any OS.
+1. create conda env: conda env create -f environment.yml  
+2. in image_cropper.ipynb, change parameters and run the script
