@@ -15,5 +15,6 @@ Efficiency:
 
 ## SETUP FOR IMAGE CROPPER:
 Tested under MacOS but should be working under any OS.
-1. create conda env: conda env create -f environment.yml  
-2. in image_cropper.ipynb, change parameters and run the script
+1. create conda env: conda env create -f environment.yml
+2. Download the weight files here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing and move them to the logs/ directory
+3. in image_cropper.ipynb, change parameters and run the script
