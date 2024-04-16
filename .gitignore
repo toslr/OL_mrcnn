@@ -5,7 +5,8 @@ data/train
 data_crop
 data_crop1
 data_old
-logs
+logs/*
+!logs/.gitkeep
 output
 results
 custom_cancer.py
