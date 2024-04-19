@@ -60,8 +60,8 @@ class CustomConfig(Config):
     DEVICE = "/cpu:0"
 
 
-    #IMAGE_CHANNEL_COUNT = 1
-    #MEAN_PIXEL = np.array([127.0])
+    IMAGE_CHANNEL_COUNT = 1
+    MEAN_PIXEL = np.array([127.0])
 
 
 
@@ -118,15 +118,15 @@ class CustomDataset(utils.Dataset):
                     points = point_sets
                 ) # if using full set of points'''
 
-    '''def load_image(self, image_id):
+    def load_image(self, image_id):
         """Load the specified image and return a [H,W,1] Numpy array.
         """
         # Load image
         image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)*255
         image = np.expand_dims(image.astype(np.uint8), axis=2)
-        return image'''
+        return image
 
-    def load_image(self, image_id):
+    '''def load_image(self, image_id):
         """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
         """
         # Load the image as grayscale
@@ -135,7 +135,7 @@ class CustomDataset(utils.Dataset):
 
         # Stack the grayscale image into 3 channels
         rgb_image = np.stack((gray_image,)*3, axis=-1)
-        return rgb_image
+        return rgb_image'''
 
     def load_mask(self, image_id):
         image_info = self.image_info[image_id]
