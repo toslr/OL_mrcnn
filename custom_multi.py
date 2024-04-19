@@ -60,6 +60,10 @@ class CustomConfig(Config):
     DEVICE = "/cpu:0"
 
 
+    #IMAGE_CHANNEL_COUNT = 1
+    #MEAN_PIXEL = np.array([127.0])
+
+
 
 ############################################################
 #  Dataset
@@ -114,6 +118,24 @@ class CustomDataset(utils.Dataset):
                     points = point_sets
                 ) # if using full set of points'''
 
+    '''def load_image(self, image_id):
+        """Load the specified image and return a [H,W,1] Numpy array.
+        """
+        # Load image
+        image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)*255
+        image = np.expand_dims(image.astype(np.uint8), axis=2)
+        return image'''
+
+    def load_image(self, image_id):
+        """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
+        """
+        # Load the image as grayscale
+        gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
+        gray_image = (gray_image * 255).astype(np.uint8)
+
+        # Stack the grayscale image into 3 channels
+        rgb_image = np.stack((gray_image,)*3, axis=-1)
+        return rgb_image
 
     def load_mask(self, image_id):
         image_info = self.image_info[image_id]
@@ -223,10 +245,10 @@ def train(model):
     # COCO trained weights, we don't need to train too long. Also,
     # no need to train all layers, just the heads should do it.
                 
-    model.train(dataset_train, dataset_val,
+    '''model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 epochs=50,
-                layers='heads',#) #layers='all'
+                layers='all',
                 augmentation = imgaug.augmenters.Sequential([ 
                 imgaug.augmenters.Fliplr(1), 
                 imgaug.augmenters.Flipud(1), 
@@ -237,11 +259,42 @@ def train(model):
                 imgaug.augmenters.Grayscale(alpha=(0.0, 1.0)),
                 imgaug.augmenters.AddToHueAndSaturation((-20, 20)), # change hue and saturation
                 imgaug.augmenters.Add((-10, 10), per_channel=0.5), # change brightness of images (by -10 to 10 of original value)
-                imgaug.augmenters.Invert(0.05, per_channel=True), # invert color channels
+                #imgaug.augmenters.Invert(0.05, per_channel=True), # invert color channels
+                imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images
+                ]
+                ))'''
+	
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE,
+                epochs=40,
+                layers='heads_and_conv1',
+                augmentation = imgaug.augmenters.Sequential([ 
+                imgaug.augmenters.Fliplr(1), 
+                imgaug.augmenters.Flipud(1), 
+                imgaug.augmenters.Affine(rotate=(-45, 45)), 
+                imgaug.augmenters.Affine(rotate=(-90, 90)), 
+                imgaug.augmenters.Affine(scale=(0.5, 1.5)),
+                imgaug.augmenters.Crop(px=(0, 10)),
                 imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images
                 ]
                 ))
-				
+    
+    model.train(dataset_train, dataset_val,
+            learning_rate=config.LEARNING_RATE/10,
+            epochs=10,
+            layers='all',
+            augmentation = imgaug.augmenters.Sequential([ 
+            imgaug.augmenters.Fliplr(1), 
+            imgaug.augmenters.Flipud(1), 
+            imgaug.augmenters.Affine(rotate=(-45, 45)), 
+            imgaug.augmenters.Affine(rotate=(-90, 90)), 
+            imgaug.augmenters.Affine(scale=(0.5, 1.5)),
+            imgaug.augmenters.Crop(px=(0, 10)),
+            imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images
+            ]
+            ))
+
+    
 # Another way of using imgaug    
 # augmentation = imgaug.Sometimes(5/6,aug.OneOf(
                                             # [
@@ -266,6 +319,7 @@ if __name__ == '__main__':
     if not os.path.exists(weights_path):
         utils.download_trained_weights(weights_path)
 
+    #model.load_weights(weights_path, by_name=True, exclude=['mrcnn_bbox_fc', 'mrcnn_class_logits','mrcnn_mask','conv1'])
     tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
         
     train(model)			

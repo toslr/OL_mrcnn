@@ -245,6 +245,6 @@ if __name__ == '__main__':
     if not os.path.exists(weights_path):
         utils.download_trained_weights(weights_path)
 
-    
+    tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
         
     train(model)			
