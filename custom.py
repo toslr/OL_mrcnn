@@ -9,7 +9,7 @@ from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
 import imgaug
 import tensorflow as tf
-from memory_profiler import profile
+#from memory_profiler import profile
 
 # Root directory of the project
 ROOT_DIR = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn"
@@ -41,12 +41,12 @@ class CustomConfig(Config):
     # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
     GPU_COUNT = 1
     
-    # We use a GPU with 12GB memory, which can fit two images.
+    # 12GB GPU = 2 small images.
     # Adjust down if you use a smaller GPU.
     IMAGES_PER_GPU = 1
     
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # Background + Hard_hat, Safety_vest
+    NUM_CLASSES = 1 + 1  # Background + cell
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 50
@@ -70,7 +70,7 @@ class CustomConfig(Config):
 
 class CustomDataset(utils.Dataset):
 
-    def load_custom(self, dataset_dir, subset):
+    def load_custom(self, dataset_dir, subset, ):
         """Load a subset of the Dog-Cat dataset.
         dataset_dir: Root directory of the dataset.
         subset: Subset to load: train or val
@@ -79,8 +79,8 @@ class CustomDataset(utils.Dataset):
         # Add classes. We have only one class to add.
         self.add_class("cell", 1, "ring")
      
-        # Train or validation dataset?
-        assert subset in ["train", "valid","test"]
+        # Train / validation / test dataset?
+        assert subset in ["train", "valid", "test"]
         dataset_dir = os.path.join(dataset_dir, subset)
 
         annotations_dir = os.path.join(dataset_dir, "jsons")
@@ -89,9 +89,8 @@ class CustomDataset(utils.Dataset):
             if file.endswith(".json"):
                 image_id = os.path.basename(file)[:-10]
                 annotations = json.load(open(os.path.join(annotations_dir, file))) 
-                #{'shapes':[{'points':[[],[]],'label':'Hard_hat'},{'points':[[],[]],'label':'Safety_vest'}],'imagePath':'0001.jpg','imageHeight':480,'imageWidth':640}
+                #{'shapes':[{'points':[[],[]],'label':'my_label'},{'points':[[],[]],'label':'my_label'}],'imagePath':'0001.jpg','imageHeight':480,'imageWidth':640}
                 point_sets = [shape['points'] for shape in annotations['shapes']]
-                objects = [shape['label'] for shape in annotations['shapes']]
                 self.add_image(
                     source = "cell",
                     image_id = image_id,
@@ -100,17 +99,21 @@ class CustomDataset(utils.Dataset):
                     height = annotations['imageHeight'],
                     polygons = point_sets
                 ) # if using polygon filler
-                '''self.add_image(
-                    source = "cell",
-                    image_id = image_id,
-                    path = os.path.join(dataset_dir, "imgs", os.path.basename(file)[:-10]) +'.tif',
-                    width = annotations['imageWidth'],
-                    height = annotations['imageHeight'],
-                    points = point_sets
-                ) # if using full set of points'''
 
+    def load_image(self, image_id):
+        """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
+        """
+        # Load the image as grayscale
+        gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
+        gray_image = (gray_image * 255).astype(np.uint8)
+
+        # Stack the grayscale image into 3 channels
+        rgb_image = np.stack((gray_image,)*3, axis=-1)
+        return rgb_image
 
     def load_mask(self, image_id):
+        """ Load instance masks for the given image and returns a [H,W,instance_count] array of binary masks. 
+        """
         image_info = self.image_info[image_id]
         mask = np.zeros([image_info["height"], image_info["width"], len(image_info["polygons"])],
                         dtype=np.uint8)
@@ -129,53 +132,16 @@ class CustomDataset(utils.Dataset):
         mask = apply_voids(mask, binary_mask)
         return mask.astype(bool), np.ones([mask.shape[-1]], dtype=np.int32)
 
-    '''def load_mask(self, image_id):
-        """Generate instance masks for an image.
-       Returns:
-        masks: A bool array of shape [height, width, instance count] with
-            one mask per instance.
-        class_ids: a 1D array of class IDs of the instance masks.
-        """
-        # If not a Dog-Cat dataset image, delegate to parent class.
-        image_info = self.image_info[image_id]
-        if image_info["source"] != "cell":
-            return super(self.__class__, self).load_mask(image_id)
-
-        
-        # Convert polygons to a bitmap mask of shape [height, width, instance_count]        
-        mask = np.zeros([image_info["height"], image_info["width"], len(image_info["polygons"])],
-                        dtype=np.uint8)
-        for i, p in enumerate(image_info["polygons"]):
-            # Get indexes of pixels inside the polygon and set them to 1
-            all_points_x = [point[0] for point in p]
-            all_points_y = [point[1] for point in p]
-            rr, cc = skimage.draw.polygon(all_points_y,all_points_x)
-            mask[rr, cc, i] = 1
-        """
-        # Convert points to a bitmap mask of shape [height, width, instance_count]
-        mask = np.zeros([image_info["height"], image_info["width"], len(image_info["points"])])
-        for i, set in enumerate(image_info["points"]):
-            all_points_x = [point[0] for point in set]
-            all_points_y = [point[1] for point in set]
-            mask[all_points_y, all_points_x, i] = 1"""
-
-
-        # Return mask, and array of class IDs of each instance. Since we have
-        # one class ID only, we return an array of 1s
-        # Map class names to class IDs.
-        
-        return mask.astype(bool), np.ones([mask.shape[-1]], dtype=np.int32)
-        return mask, num_ids #np.ones([mask.shape[-1]], dtype=np.int32)'''
-
     def image_reference(self, image_id):
-        """Return the path of the image."""
+        """Return the path of the image.
+        """
         info = self.image_info[image_id]
         if info["source"] == "object":
             return info["path"]
         else:
             super(self.__class__, self).image_reference(image_id)
 
-@profile
+#@profile
 def train(model):
     """Train the model."""
     # Training dataset.
@@ -189,14 +155,11 @@ def train(model):
     dataset_val.prepare()
 
     # *** This training schedule is an example. Update to your needs ***
-    # Since we're using a very small dataset, and starting from
-    # COCO trained weights, we don't need to train too long. Also,
-    # no need to train all layers, just the heads should do it.
                 
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 epochs=50,
-                layers='all', #) #layers='all', 
+                layers='heads', #) #layers='all', 
                 augmentation = imgaug.augmenters.Sequential([ 
                 imgaug.augmenters.Fliplr(1), 
                 imgaug.augmenters.Flipud(1), 
@@ -207,32 +170,13 @@ def train(model):
                 imgaug.augmenters.Grayscale(alpha=(0.0, 1.0)),
                 imgaug.augmenters.AddToHueAndSaturation((-20, 20)), # change hue and saturation
                 imgaug.augmenters.Add((-10, 10), per_channel=0.5), # change brightness of images (by -10 to 10 of original value)
-                imgaug.augmenters.Invert(0.05, per_channel=True), # invert color channels
+                #imgaug.augmenters.Invert(0.05, per_channel=True), # invert color channels
                 imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images
                 
                 ]
                 
                 ))
-				
-
-'''
- this augmentation is applied consecutively to each image. In other words, for each image, the augmentation apply flip LR,
- and then followed by flip UD, then followed by rotation of -45 and 45, then followed by another rotation of -90 and 90,
- and lastly followed by scaling with factor 0.5 and 1.5. '''
 	
-    
-# Another way of using imgaug    
-# augmentation = imgaug.Sometimes(5/6,aug.OneOf(
-                                            # [
-                                            # imgaug.augmenters.Fliplr(1), 
-                                            # imgaug.augmenters.Flipud(1), 
-                                            # imgaug.augmenters.Affine(rotate=(-45, 45)), 
-                                            # imgaug.augmenters.Affine(rotate=(-90, 90)), 
-                                            # imgaug.augmenters.Affine(scale=(0.5, 1.5))
-                                             # ]
-                                        # ) 
-                                   # )
-
 
 if __name__ == '__main__':
     config = CustomConfig()
@@ -245,6 +189,7 @@ if __name__ == '__main__':
     if not os.path.exists(weights_path):
         utils.download_trained_weights(weights_path)
 
+    #model.load_weights(weights_path, by_name=True, exclude=["mrcnn_class_logits", "mrcnn_bbox_fc","mrcnn_bbox", "mrcnn_mask"])
     tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
         
     train(model)			

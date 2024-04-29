@@ -49,7 +49,7 @@ class CustomConfig(Config):
     NUM_CLASSES = 1 + 4 # Background + opc, arborized, partial, ring
 
     # Number of training steps per epoch
-    STEPS_PER_EPOCH = 50
+    STEPS_PER_EPOCH = 10
 
     DETECTION_MIN_CONFIDENCE = 0.9
     
@@ -58,10 +58,6 @@ class CustomConfig(Config):
     #gpu = tf.config.experimental.list_physical_devices('GPU')
     #tf.config.experimental.set_memory_growth(gpu[0], True)
     DEVICE = "/cpu:0"
-
-
-    IMAGE_CHANNEL_COUNT = 1
-    MEAN_PIXEL = np.array([127.0])
 
 
 
@@ -126,7 +122,7 @@ class CustomDataset(utils.Dataset):
         image = np.expand_dims(image.astype(np.uint8), axis=2)
         return image
 
-    '''def load_image(self, image_id):
+    def load_image(self, image_id):
         """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
         """
         # Load the image as grayscale
@@ -135,7 +131,7 @@ class CustomDataset(utils.Dataset):
 
         # Stack the grayscale image into 3 channels
         rgb_image = np.stack((gray_image,)*3, axis=-1)
-        return rgb_image'''
+        return rgb_image
 
     def load_mask(self, image_id):
         image_info = self.image_info[image_id]
@@ -266,7 +262,7 @@ def train(model):
 	
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=40,
+                epochs=2,
                 layers='heads_and_conv1',
                 augmentation = imgaug.augmenters.Sequential([ 
                 imgaug.augmenters.Fliplr(1), 
@@ -279,7 +275,7 @@ def train(model):
                 ]
                 ))
     
-    model.train(dataset_train, dataset_val,
+    """model.train(dataset_train, dataset_val,
             learning_rate=config.LEARNING_RATE/10,
             epochs=10,
             layers='all',
@@ -292,20 +288,10 @@ def train(model):
             imgaug.augmenters.Crop(px=(0, 10)),
             imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images
             ]
-            ))
+            ))"""
 
     
-# Another way of using imgaug    
-# augmentation = imgaug.Sometimes(5/6,aug.OneOf(
-                                            # [
-                                            # imgaug.augmenters.Fliplr(1), 
-                                            # imgaug.augmenters.Flipud(1), 
-                                            # imgaug.augmenters.Affine(rotate=(-45, 45)), 
-                                            # imgaug.augmenters.Affine(rotate=(-90, 90)), 
-                                            # imgaug.augmenters.Affine(scale=(0.5, 1.5))
-                                             # ]
-                                        # ) 
-                                   # )
+
 
 
 if __name__ == '__main__':
@@ -319,7 +305,7 @@ if __name__ == '__main__':
     if not os.path.exists(weights_path):
         utils.download_trained_weights(weights_path)
 
-    #model.load_weights(weights_path, by_name=True, exclude=['mrcnn_bbox_fc', 'mrcnn_class_logits','mrcnn_mask','conv1'])
-    tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
+    model.load_weights(weights_path, by_name=True, exclude=['mrcnn_bbox_fc', 'mrcnn_class_logits','mrcnn_mask','conv1'])
+    #tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
         
     train(model)			
