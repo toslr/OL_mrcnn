@@ -13,8 +13,5 @@ Efficiency:
 - Classification: Binary CE=0.76
 - Segmentation: IoU=0.77
 
-## SETUP FOR IMAGE CROPPER:
-Tested under MacOS but should be working under any OS.
-1. create conda env: conda env create -f environment.yml
-2. Download the weight files here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing and move them to the logs/ directory
-3. in image_cropper.ipynb, change parameters and run the script
+## LOCAL USE:
+Open the index.html in a web browser and follow the instructions.
