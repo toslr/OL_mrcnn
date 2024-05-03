@@ -26,9 +26,6 @@ import matplotlib.image as mpimg
 import tifffile as tiff
 
 from mrcnn import utils
-from mrcnn import visualize
-from mrcnn.visualize import display_images
-from mrcnn.visualize import display_instances
 import mrcnn.model as modellib
 from mrcnn.model import log
 from mrcnn.config import Config
@@ -88,13 +85,12 @@ for filename in os.listdir(TEST_DIR):
 
 res_list = []
 for image_path in image_paths:
-    #print(os.path.basename(image_path))
+    print(os.path.basename(image_path))
     image = skimage.io.imread(image_path,as_gray=True)*255
     image = np.expand_dims(image.astype(np.uint8), axis=2)
     macro_results = macro_model.detect([image], verbose=0)
     macro_results = nms_suppression_multi(macro_results, 0.3)
     r = macro_results[0]
-    #visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'], dataset_val.class_names, r['scores'], title="Predictions",show_bbox=True, show_mask=False)
     img_res_dir = os.path.join(RESULTS_DIR, os.path.basename(image_path)[:-4])
     os.makedirs(img_res_dir, exist_ok=True)
     for i in range(r['masks'].shape[2]):

@@ -9,7 +9,6 @@ from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
 import imgaug
 import tensorflow as tf
-from memory_profiler import profile
 
 # Root directory of the project
 ROOT_DIR = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn"
@@ -30,34 +29,41 @@ COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
 
+############################################################
+#  Config
+############################################################
+GRAYSCALE = False
+DATA_PATH = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data"
+
 class CustomConfig(Config):
-    """Configuration for training on the custom  dataset.
+    """Configuration for training on the custom dataset.
     Derives from the base Config class and overrides some values.
     """
-    # Give the configuration a recognizable name
-    NAME = "multicell"
-
-
-    # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
-    GPU_COUNT = 1
     
-    # We use a GPU with 12GB memory, which can fit two images.
-    # Adjust down if you use a smaller GPU.
-    IMAGES_PER_GPU = 1
+    NAME = "multicell" # Give the configuration a recognizable name
+
+    GPU_COUNT = 1 # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
+    IMAGES_PER_GPU = 1 # We use a GPU with 12GB memory, which can fit two images. Adjust down if you use a smaller GPU.
+
+    NUM_CLASSES = 1 + 4 # Number of classes (including background). Background + opc, arborized, partial, ring
+
+    EPOCHS = 50 # Number of epochs to train
+    STEPS_PER_EPOCH = 10 # Number of training steps per epoch
+    LEARNING_RATE = 0.001 # Learning rate
+    LAYERS = 'heads_and_conv1' # layers='heads' or 'all'
+
+    DETECTION_MIN_CONFIDENCE = 0.7 # Minimum probability value to accept a detected instance
     
-    # Number of classes (including background)
-    NUM_CLASSES = 1 + 4 # Background + opc, arborized, partial, ring
+    DEVICE = "/cpu:0"  # /cpu:0 or /gpu:0
 
-    # Number of training steps per epoch
-    STEPS_PER_EPOCH = 10
-
-    DETECTION_MIN_CONFIDENCE = 0.9
+    MAX_GT_INSTANCES = 100 # Maximum number of ground truth instances to use in one image
+    DETECTION_MAX_INSTANCES = 35 # Max number of final detections
     
-    LEARNING_RATE = 0.001
 
-    #gpu = tf.config.experimental.list_physical_devices('GPU')
-    #tf.config.experimental.set_memory_growth(gpu[0], True)
-    DEVICE = "/cpu:0"
+    if DEVICE == "/gpu:0":
+        os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+        gpu = tf.config.experimental.list_physical_devices('GPU')
+        tf.config.experimental.set_memory_growth(gpu[0], True)
 
 
 
@@ -114,24 +120,25 @@ class CustomDataset(utils.Dataset):
                     points = point_sets
                 ) # if using full set of points'''
 
-    def load_image(self, image_id):
+    '''def load_image(self, image_id):
         """Load the specified image and return a [H,W,1] Numpy array.
         """
         # Load image
         image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)*255
         image = np.expand_dims(image.astype(np.uint8), axis=2)
-        return image
+        return image'''
 
-    def load_image(self, image_id):
-        """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
-        """
-        # Load the image as grayscale
-        gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
-        gray_image = (gray_image * 255).astype(np.uint8)
+    if GRAYSCALE:
+        def load_image(self, image_id):
+            """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
+            """
+            # Load the image as grayscale
+            gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
+            gray_image = (gray_image * 255).astype(np.uint8)
 
-        # Stack the grayscale image into 3 channels
-        rgb_image = np.stack((gray_image,)*3, axis=-1)
-        return rgb_image
+            # Stack the grayscale image into 3 channels
+            rgb_image = np.stack((gray_image,)*3, axis=-1)
+            return rgb_image
 
     def load_mask(self, image_id):
         image_info = self.image_info[image_id]
@@ -151,7 +158,7 @@ class CustomDataset(utils.Dataset):
             rr, cc = skimage.draw.polygon(all_points_y, all_points_x)
             mask[rr,cc,i] = 1
         num_ids = np.array(num_ids, dtype=np.int32)
-        #mask = apply_voids(mask, binary_mask)
+        mask = apply_voids(mask, binary_mask)
         return mask.astype(bool), num_ids
 
     '''def load_mask(self, image_id):
@@ -223,17 +230,16 @@ def nms_suppression_multi(results,threshold):
 
 
 
-@profile
 def train(model):
     """Train the model."""
     # Training dataset.
     dataset_train = CustomDataset()
-    dataset_train.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data", "train")
+    dataset_train.load_custom(DATA_PATH, "train")
     dataset_train.prepare()
 
     # Validation dataset
     dataset_val = CustomDataset()
-    dataset_val.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data", "valid")
+    dataset_val.load_custom(DATA_PATH, "valid")
     dataset_val.prepare()
 
     # *** This training schedule is an example. Update to your needs ***
@@ -262,8 +268,8 @@ def train(model):
 	
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=2,
-                layers='heads_and_conv1',
+                epochs=config.EPOCHS,
+                layers=config.LAYERS,
                 augmentation = imgaug.augmenters.Sequential([ 
                 imgaug.augmenters.Fliplr(1), 
                 imgaug.augmenters.Flipud(1), 

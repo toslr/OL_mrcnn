@@ -24,43 +24,49 @@ from mrcnn import model as modellib, utils
 # Path to trained weights file
 COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 
-
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
 
+############################################################
+#  Config
+############################################################
+
+GRAYSCALE = True
+DATA_PATH = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data_crop"
+
 class CustomConfig(Config):
     """Configuration for training on the custom  dataset.
     Derives from the base Config class and overrides some values.
     """
-    # Give the configuration a recognizable name
-    NAME = "cell"
-
-
-    # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
-    GPU_COUNT = 1
     
-    # 12GB GPU = 2 small images.
-    # Adjust down if you use a smaller GPU.
-    IMAGES_PER_GPU = 1
-    
-    # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # Background + cell
+    NAME = "cell" # Give the configuration a recognizable name
 
-    # Number of training steps per epoch
-    STEPS_PER_EPOCH = 50
+    GPU_COUNT = 1 # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
+    IMAGES_PER_GPU = 1 # 12GB GPU = 2 small images. Adjust down if you use a smaller GPU.
+    
+    NUM_CLASSES = 1 + 1   # Number of classes (including background=1)
+
+    EPOCHS = 50 # Number of epochs to train
+    STEPS_PER_EPOCH = 50 # Number of training steps per epoch
+    LEARNING_RATE = 0.001 # Learning rate
+    LAYERS = "heads" # layers='heads' or 'all'
 
     DETECTION_MIN_CONFIDENCE = 0.9
     
-    LEARNING_RATE = 0.001
+    DEVICE = "/cpu:0"  # /cpu:0 or /gpu:0
 
-    #gpu = tf.config.experimental.list_physical_devices('GPU')
-    #tf.config.experimental.set_memory_growth(gpu[0], True)
-    DEVICE = "/cpu:0"
+    MAX_GT_INSTANCES = 100 # Maximum number of ground truth instances to use in one image
+    DETECTION_MAX_INSTANCES = 35 # Maximum number of instances in one image
 
-    #MAX_GT_INSTANCES = 1
-    #DETECTION_MAX_INSTANCES = 1
+    
+
+
+    if DEVICE == "/gpu:0":
+        os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+        gpu = tf.config.experimental.list_physical_devices('GPU')
+        tf.config.experimental.set_memory_growth(gpu[0], True)
 
 
 
@@ -70,7 +76,7 @@ class CustomConfig(Config):
 
 class CustomDataset(utils.Dataset):
 
-    def load_custom(self, dataset_dir, subset, ):
+    def load_custom(self, dataset_dir, subset):
         """Load a subset of the Dog-Cat dataset.
         dataset_dir: Root directory of the dataset.
         subset: Subset to load: train or val
@@ -100,16 +106,17 @@ class CustomDataset(utils.Dataset):
                     polygons = point_sets
                 ) # if using polygon filler
 
-    def load_image(self, image_id):
-        """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
-        """
-        # Load the image as grayscale
-        gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
-        gray_image = (gray_image * 255).astype(np.uint8)
+    if GRAYSCALE:
+        def load_image(self, image_id):
+            """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
+            """
+            # Load the image as grayscale
+            gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
+            gray_image = (gray_image * 255).astype(np.uint8)
 
-        # Stack the grayscale image into 3 channels
-        rgb_image = np.stack((gray_image,)*3, axis=-1)
-        return rgb_image
+            # Stack the grayscale image into 3 channels
+            rgb_image = np.stack((gray_image,)*3, axis=-1)
+            return rgb_image
 
     def load_mask(self, image_id):
         """ Load instance masks for the given image and returns a [H,W,instance_count] array of binary masks. 
@@ -146,20 +153,20 @@ def train(model):
     """Train the model."""
     # Training dataset.
     dataset_train = CustomDataset()
-    dataset_train.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data_crop", "train")
+    dataset_train.load_custom(DATA_PATH, "train")
     dataset_train.prepare()
 
     # Validation dataset
     dataset_val = CustomDataset()
-    dataset_val.load_custom("/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data_crop", "valid")
+    dataset_val.load_custom(DATA_PATH, "valid")
     dataset_val.prepare()
 
     # *** This training schedule is an example. Update to your needs ***
                 
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=50,
-                layers='heads', #) #layers='all', 
+                epochs=config.EPOCHS,
+                layers=config.LAYERS, #) #layers='all', 
                 augmentation = imgaug.augmenters.Sequential([ 
                 imgaug.augmenters.Fliplr(1), 
                 imgaug.augmenters.Flipud(1), 
