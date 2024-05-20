@@ -9,7 +9,6 @@ from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
 import imgaug
 import tensorflow as tf
-from memory_profiler import profile
 
 # Root directory of the project
 ROOT_DIR = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn"
@@ -230,7 +229,7 @@ def nms_suppression_multi(results,threshold):
     return new_results
 
 
-@profile
+
 def train(model):
     """Train the model."""
     # Training dataset.
