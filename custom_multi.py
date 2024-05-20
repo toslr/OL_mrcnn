@@ -9,6 +9,7 @@ from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
 import imgaug
 import tensorflow as tf
+from memory_profiler import profile
 
 # Root directory of the project
 ROOT_DIR = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn"
@@ -32,7 +33,7 @@ DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 ############################################################
 #  Config
 ############################################################
-GRAYSCALE = False
+GRAYSCALE = True
 DATA_PATH = "/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data"
 
 class CustomConfig(Config):
@@ -48,16 +49,16 @@ class CustomConfig(Config):
     NUM_CLASSES = 1 + 4 # Number of classes (including background). Background + opc, arborized, partial, ring
 
     EPOCHS = 50 # Number of epochs to train
-    STEPS_PER_EPOCH = 10 # Number of training steps per epoch
+    STEPS_PER_EPOCH = 50 # Number of training steps per epoch
     LEARNING_RATE = 0.001 # Learning rate
-    LAYERS = 'heads_and_conv1' # layers='heads' or 'all'
+    LAYERS = 'heads' # layers='heads' or 'all'
 
     DETECTION_MIN_CONFIDENCE = 0.7 # Minimum probability value to accept a detected instance
     
     DEVICE = "/cpu:0"  # /cpu:0 or /gpu:0
 
-    MAX_GT_INSTANCES = 100 # Maximum number of ground truth instances to use in one image
-    DETECTION_MAX_INSTANCES = 35 # Max number of final detections
+    MAX_GT_INSTANCES = 20 # Maximum number of ground truth instances to use in one image
+    DETECTION_MAX_INSTANCES = 20 # Max number of final detections
     
 
     if DEVICE == "/gpu:0":
@@ -105,7 +106,7 @@ class CustomDataset(utils.Dataset):
                 self.add_image(
                     source = "multicell",
                     image_id = image_id,
-                    path = os.path.join(dataset_dir, "imgs", os.path.basename(file)[:-10]) +'.tif',
+                    path = os.path.join(dataset_dir, "imgsnorm", os.path.basename(file)[:-10]) +'.tif',
                     width = annotations['imageWidth'],
                     height = annotations['imageHeight'],
                     polygons = point_sets,
@@ -145,8 +146,8 @@ class CustomDataset(utils.Dataset):
         num_ids = image_info["num_ids"]
         mask = np.zeros([image_info["height"], image_info["width"], len(image_info["polygons"])],
                         dtype=np.uint8)
-        binary_mask_path = os.path.join(os.path.dirname(image_info["path"])[:-5], "masks", image_info["id"] + ".tif")
-        binary_mask = cv2.imread(binary_mask_path, cv2.IMREAD_GRAYSCALE)
+        binary_mask_path = os.path.join(os.path.dirname(image_info["path"])[:-9], "masks", image_info["id"] + ".tif")
+        #binary_mask = cv2.imread(binary_mask_path, cv2.IMREAD_GRAYSCALE)
         def apply_voids(masks, base_image):
             void_mask = base_image > 0  # Assuming nnz values indicate voids
             for i in range(masks.shape[2]):
@@ -158,7 +159,7 @@ class CustomDataset(utils.Dataset):
             rr, cc = skimage.draw.polygon(all_points_y, all_points_x)
             mask[rr,cc,i] = 1
         num_ids = np.array(num_ids, dtype=np.int32)
-        mask = apply_voids(mask, binary_mask)
+        #mask = apply_voids(mask, binary_mask)
         return mask.astype(bool), num_ids
 
     '''def load_mask(self, image_id):
@@ -229,7 +230,7 @@ def nms_suppression_multi(results,threshold):
     return new_results
 
 
-
+@profile
 def train(model):
     """Train the model."""
     # Training dataset.
@@ -311,7 +312,7 @@ if __name__ == '__main__':
     if not os.path.exists(weights_path):
         utils.download_trained_weights(weights_path)
 
-    model.load_weights(weights_path, by_name=True, exclude=['mrcnn_bbox_fc', 'mrcnn_class_logits','mrcnn_mask','conv1'])
-    #tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
+    #model.load_weights(weights_path, by_name=True, exclude=['mrcnn_bbox_fc', 'mrcnn_class_logits','mrcnn_mask','conv1'])
+    tf.keras.Model.load_weights(model.keras_model, weights_path, by_name=True, skip_mismatch=True)
         
     train(model)			

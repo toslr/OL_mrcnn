@@ -48,10 +48,10 @@ class CustomConfig(Config):
     
     NUM_CLASSES = 1 + 1   # Number of classes (including background=1)
 
-    EPOCHS = 50 # Number of epochs to train
-    STEPS_PER_EPOCH = 50 # Number of training steps per epoch
+    EPOCHS = 1 # Number of epochs to train
+    STEPS_PER_EPOCH = 1 # Number of training steps per epoch
     LEARNING_RATE = 0.001 # Learning rate
-    LAYERS = "heads" # layers='heads' or 'all'
+    LAYERS = "all" # layers='heads' or 'all'
 
     DETECTION_MIN_CONFIDENCE = 0.9
     
