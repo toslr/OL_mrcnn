@@ -47,8 +47,8 @@ class CustomConfig(Config):
 
     NUM_CLASSES = 1 + 4 # Number of classes (including background). Background + opc, arborized, partial, ring
 
-    EPOCHS = 50 # Number of epochs to train
-    STEPS_PER_EPOCH = 50 # Number of training steps per epoch
+    EPOCHS = 2 # Number of epochs to train
+    STEPS_PER_EPOCH = 10 # Number of training steps per epoch
     LEARNING_RATE = 0.001 # Learning rate
     LAYERS = 'heads' # layers='heads' or 'all'
 
@@ -71,7 +71,7 @@ class CustomConfig(Config):
 #  Dataset
 ############################################################
 
-class CustomDataset(utils.Dataset):
+class CustomDataset(utils.Dataset): 
 
     def load_custom(self, dataset_dir, subset):
         """Load a subset of the Dog-Cat dataset.
