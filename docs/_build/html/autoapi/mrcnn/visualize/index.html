@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mrcnn.visualize &mdash; OL_mrcnn 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OL_mrcnn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mrcnn.visualize</span></code></a><ul>
+<li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li><a class="reference internal" href="#mrcnn.visualize.ROOT_DIR"><code class="docutils literal notranslate"><span class="pre">ROOT_DIR</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.display_images"><code class="docutils literal notranslate"><span class="pre">display_images()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.random_colors"><code class="docutils literal notranslate"><span class="pre">random_colors()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.apply_mask"><code class="docutils literal notranslate"><span class="pre">apply_mask()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.display_instances"><code class="docutils literal notranslate"><span class="pre">display_instances()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.display_differences"><code class="docutils literal notranslate"><span class="pre">display_differences()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.draw_rois"><code class="docutils literal notranslate"><span class="pre">draw_rois()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.draw_box"><code class="docutils literal notranslate"><span class="pre">draw_box()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.display_top_masks"><code class="docutils literal notranslate"><span class="pre">display_top_masks()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.plot_precision_recall"><code class="docutils literal notranslate"><span class="pre">plot_precision_recall()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.plot_overlaps"><code class="docutils literal notranslate"><span class="pre">plot_overlaps()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.draw_boxes"><code class="docutils literal notranslate"><span class="pre">draw_boxes()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.display_table"><code class="docutils literal notranslate"><span class="pre">display_table()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.visualize.display_weight_stats"><code class="docutils literal notranslate"><span class="pre">display_weight_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OL_mrcnn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mrcnn.visualize</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/mrcnn/visualize/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-mrcnn.visualize">
+<span id="mrcnn-visualize"></span><h1><a class="reference internal" href="#module-mrcnn.visualize" title="mrcnn.visualize"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mrcnn.visualize</span></code></a><a class="headerlink" href="#module-mrcnn.visualize" title="Link to this heading"></a></h1>
+<p>Mask R-CNN
+Display and Visualization Functions.</p>
+<p>Copyright (c) 2017 Matterport, Inc.
+Licensed under the MIT License (see LICENSE for details)
+Written by Waleed Abdulla</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.display_images" title="mrcnn.visualize.display_images"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_images</span></code></a>(images[, titles, cols, cmap, norm, ...])</p></td>
+<td><p>Display the given set of images, optionally with titles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mrcnn.visualize.random_colors" title="mrcnn.visualize.random_colors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">random_colors</span></code></a>(N[, bright])</p></td>
+<td><p>Generate random colors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.apply_mask" title="mrcnn.visualize.apply_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_mask</span></code></a>(image, mask, color[, alpha])</p></td>
+<td><p>Apply the given mask to the image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mrcnn.visualize.display_instances" title="mrcnn.visualize.display_instances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_instances</span></code></a>(image, boxes, masks, class_ids, ...)</p></td>
+<td><p>boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.display_differences" title="mrcnn.visualize.display_differences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_differences</span></code></a>(image, gt_box, gt_class_id, ...[, ...])</p></td>
+<td><p>Display ground truth and prediction instances on the same image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mrcnn.visualize.draw_rois" title="mrcnn.visualize.draw_rois"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_rois</span></code></a>(image, rois, refined_rois, mask, class_ids, ...)</p></td>
+<td><p>anchors: [n, (y1, x1, y2, x2)] list of anchors in image coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.draw_box" title="mrcnn.visualize.draw_box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_box</span></code></a>(image, box, color)</p></td>
+<td><p>Draw 3-pixel width bounding boxes on the given image array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mrcnn.visualize.display_top_masks" title="mrcnn.visualize.display_top_masks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_top_masks</span></code></a>(image, mask, class_ids, class_names)</p></td>
+<td><p>Display the given image and the top few class masks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.plot_precision_recall" title="mrcnn.visualize.plot_precision_recall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_precision_recall</span></code></a>(AP, precisions, recalls)</p></td>
+<td><p>Draw the precision-recall curve.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mrcnn.visualize.plot_overlaps" title="mrcnn.visualize.plot_overlaps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_overlaps</span></code></a>(gt_class_ids, pred_class_ids, ...[, ...])</p></td>
+<td><p>Draw a grid showing how ground truth objects are classified.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.draw_boxes" title="mrcnn.visualize.draw_boxes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_boxes</span></code></a>(image[, boxes, refined_boxes, masks, ...])</p></td>
+<td><p>Draw bounding boxes and segmentation masks with different</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mrcnn.visualize.display_table" title="mrcnn.visualize.display_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_table</span></code></a>(table)</p></td>
+<td><p>Display values in a table format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.display_weight_stats" title="mrcnn.visualize.display_weight_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_weight_stats</span></code></a>(model)</p></td>
+<td><p>Scans all the weights in the model and returns a list of tuples</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.visualize.ROOT_DIR" title="mrcnn.visualize.ROOT_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ROOT_DIR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="mrcnn.visualize.ROOT_DIR">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">ROOT_DIR</span></span><a class="headerlink" href="#mrcnn.visualize.ROOT_DIR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.display_images">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">display_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.display_images" title="Link to this definition"></a></dt>
+<dd><p>Display the given set of images, optionally with titles.
+images: list or array of image tensors in HWC format.
+titles: optional. A list of titles to display with each image.
+cols: number of images per row
+cmap: Optional. Color map to use. For example, “Blues”.
+norm: Optional. A Normalize instance to map values to colors.
+interpolation: Optional. Image interpolation to use for display.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.random_colors">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">random_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bright</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.random_colors" title="Link to this definition"></a></dt>
+<dd><p>Generate random colors.
+To get visually distinct colors, generate them in HSV space then
+convert to RGB.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.apply_mask">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">apply_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.apply_mask" title="Link to this definition"></a></dt>
+<dd><p>Apply the given mask to the image.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.display_instances">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">display_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">16)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figAx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_caption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">captions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.display_instances" title="Link to this definition"></a></dt>
+<dd><p>boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
+masks: [height, width, num_instances]
+class_ids: [num_instances]
+class_names: list of class names of the dataset
+scores: (optional) confidence scores for each box
+title: (optional) Figure title
+show_mask, show_bbox: To show masks and bounding boxes or not
+figsize: (optional) the size of the image
+colors: (optional) An array or colors to use with each object
+captions: (optional) A list of strings to use as captions for each object</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.display_differences">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">display_differences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gt_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gt_class_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gt_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_class_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_score</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.display_differences" title="Link to this definition"></a></dt>
+<dd><p>Display ground truth and prediction instances on the same image.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.draw_rois">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">draw_rois</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rois</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refined_rois</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.draw_rois" title="Link to this definition"></a></dt>
+<dd><p>anchors: [n, (y1, x1, y2, x2)] list of anchors in image coordinates.
+proposals: [n, 4] the same anchors but refined to fit objects better.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.draw_box">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">draw_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.draw_box" title="Link to this definition"></a></dt>
+<dd><p>Draw 3-pixel width bounding boxes on the given image array.
+color: list of 3 int values for RGB.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.display_top_masks">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">display_top_masks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.display_top_masks" title="Link to this definition"></a></dt>
+<dd><p>Display the given image and the top few class masks.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.plot_precision_recall">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">plot_precision_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">AP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precisions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalls</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.plot_precision_recall" title="Link to this definition"></a></dt>
+<dd><p>Draw the precision-recall curve.</p>
+<p>AP: Average precision at IoU &gt;= 0.5
+precisions: list of precision values
+recalls: list of recall values</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.plot_overlaps">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">plot_overlaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gt_class_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_class_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlaps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.plot_overlaps" title="Link to this definition"></a></dt>
+<dd><p>Draw a grid showing how ground truth objects are classified.
+gt_class_ids: [N] int. Ground truth class IDs
+pred_class_id: [N] int. Predicted class IDs
+pred_scores: [N] float. The probability scores of predicted classes
+overlaps: [pred_boxes, gt_boxes] IoU overlaps of predictions and GT boxes.
+class_names: list of all class names in the dataset
+threshold: Float. The prediction probability required to predict a class</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.draw_boxes">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">draw_boxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refined_boxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">captions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibilities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.draw_boxes" title="Link to this definition"></a></dt>
+<dd><p>Draw bounding boxes and segmentation masks with different
+customizations.</p>
+<p>boxes: [N, (y1, x1, y2, x2, class_id)] in image coordinates.
+refined_boxes: Like boxes, but draw with solid lines to show</p>
+<blockquote>
+<div><p>that they’re the result of refining ‘boxes’.</p>
+</div></blockquote>
+<p>masks: [N, height, width]
+captions: List of N titles to display on each box
+visibilities: (optional) List of values of 0, 1, or 2. Determine how</p>
+<blockquote>
+<div><p>prominent each bounding box should be.</p>
+</div></blockquote>
+<p>title: An optional title to show over the image
+ax: (optional) Matplotlib axis to draw on.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.display_table">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">display_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.display_table" title="Link to this definition"></a></dt>
+<dd><p>Display values in a table format.
+table: an iterable of rows, and each row is an iterable of values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mrcnn.visualize.display_weight_stats">
+<span class="sig-prename descclassname"><span class="pre">mrcnn.visualize.</span></span><span class="sig-name descname"><span class="pre">display_weight_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.visualize.display_weight_stats" title="Link to this definition"></a></dt>
+<dd><p>Scans all the weights in the model and returns a list of tuples
+that contain stats about each weight.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tom Soulaire.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
