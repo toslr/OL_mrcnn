@@ -32,7 +32,7 @@ def nms_suppression_multi(results,threshold):
                     'scores':r['scores'][~remove_index]}]
     return new_results
 
-def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,modify_results=False):
+def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,modify_results=False,save_images=False):
     """Crop ROIs from image using the results, and correct ROIs to display only 1 object in the cropped region."""
     overlaps = detect_overlap(results[0]['rois'])
     if len(overlaps) > 0:
@@ -44,7 +44,8 @@ def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,
             class_name = class_names[r['class_ids'][i]]
             res_list.append([os.path.basename(image_path), i, class_names[r['class_ids'][i]], r['scores'][i], r['rois'][i]])
             cropped_img = image[r['rois'][i][0]:r['rois'][i][2], r['rois'][i][1]:r['rois'][i][3]]
-            cv2.imwrite(os.path.join(img_res_dir, f'{i:04d}_' + class_name + '.tif'), cropped_img)
+            if save_images:
+                cv2.imwrite(os.path.join(img_res_dir, os.path.basename(image_path)[:-3] + f'{i:04d}_' + class_name + '.tif'), cropped_img)
     
     else:
         for i in range(r['masks'].shape[2]):
@@ -60,5 +61,6 @@ def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,
                 to_erase += np.logical_and(np.logical_and(bbox_i_mask,1-r['masks'][:,:,i].astype(bool)), r['masks'][:,:,j].astype(bool)) # erase overlapping between bbox i and mask j but not mask i
             modified_image[to_erase.astype(bool)] = 0
             cropped_img = modified_image[r['rois'][i][0]:r['rois'][i][2], r['rois'][i][1]:r['rois'][i][3]]
-            cv2.imwrite(os.path.join(img_res_dir, f'{i:04d}_' + class_name + '.tif'), cropped_img)
+            if save_images:
+                cv2.imwrite(os.path.join(img_res_dir, os.path.basename(image_path)[:-3] + f'{i:04d}_' + class_name + '.tif'), cropped_img)
     return res_list

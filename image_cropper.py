@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.image as mpimg
 import tifffile as tiff
+import argparse
 
 from mrcnn import utils
 import mrcnn.model as modellib
@@ -48,6 +49,17 @@ results_name = 'test_cropper'
 
 test_dir = '/Users/tom/Desktop/Stanford/RA/OligodendroSight/OL_mrcnn/data/test/imgs'
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--device', type=str, default=DEVICE, help='Device to use')
+parser.add_argument('--g', type=int, default=num_gpu, help='Number of GPUs to use')
+parser.add_argument('--batch', type=int, default=num_img_per_gpu, help='Batch size')
+parser.add_argument('--ci', type=float, default=detection_min_confidence, help='Minimum confidence level for detection')
+parser.add_argument('--nms', type=float, default=detection_nms_threshold, help='NMS threshold for detection')
+parser.add_argument('--weights', type=str, default=weights_subpath, help='Subpath to weights file')
+parser.add_argument('--name', type=str, default=results_name, help='Name of results directory')
+parser.add_argument('--data', type=str, default=test_dir, help='Directory containing test images')
+parser.add_argument('--gray', type=bool, default=False, help='Whether to convert images to grayscale')
+args = parser.parse_args()
 
 class InferenceConfigMulti(CustomConfig):
     GPU_COUNT = num_gpu

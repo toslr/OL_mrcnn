@@ -106,10 +106,10 @@ class CustomDataset(utils.Dataset):
                     polygons = point_sets
                 ) # if using polygon filler
 
-    if GRAYSCALE:
-        def load_image(self, image_id):
-            """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
-            """
+    def load_image(self, image_id):
+        """Load the specified image as a fake RGB and return a [H,W,3] Numpy array.
+        """
+        if GRAYSCALE:
             # Load the image as grayscale
             gray_image = skimage.io.imread(self.image_info[image_id]['path'], as_gray=True)
             gray_image = (gray_image * 255).astype(np.uint8)
@@ -117,6 +117,9 @@ class CustomDataset(utils.Dataset):
             # Stack the grayscale image into 3 channels
             rgb_image = np.stack((gray_image,)*3, axis=-1)
             return rgb_image
+        else:
+            return super().load_image(image_id)
+
 
     def load_mask(self, image_id):
         """ Load instance masks for the given image and returns a [H,W,instance_count] array of binary masks. 

@@ -2,6 +2,7 @@ name: tf_test
 channels:
   - defaults
   - conda-forge
+  - bioformats_jar
 dependencies:
   - python=3.9.19
   - pip:
@@ -15,3 +16,6 @@ dependencies:
       - seaborn==0.13.2
       - scikit-learn==1.5.0
       - imgaug==0.4.0
+      - argparse=1.4.0
+      - aicsimageio==4.14.0
+      - python-bioformats==1.5.2
