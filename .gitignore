@@ -11,5 +11,4 @@ output
 results
 custom_cancer.py
 mprofile_20240214093349.dat
-test_model_cancer.ipynb
 mask_rcnn_coco.h5

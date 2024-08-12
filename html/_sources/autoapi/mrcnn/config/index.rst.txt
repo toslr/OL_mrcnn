@@ -1,0 +1,266 @@
+:py:mod:`mrcnn.config`
+======================
+
+.. py:module:: mrcnn.config
+
+.. autoapi-nested-parse::
+
+   Mask R-CNN
+   Base Configurations class.
+
+   Copyright (c) 2017 Matterport, Inc.
+   Licensed under the MIT License (see LICENSE for details)
+   Written by Waleed Abdulla
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mrcnn.config.Config
+
+
+
+
+.. py:class:: Config
+
+
+   Bases: :py:obj:`object`
+
+   Base configuration class. For custom configurations, create a
+   sub-class that inherits from this one and override properties
+   that need to be changed.
+
+   .. py:attribute:: NAME
+
+      
+
+   .. py:attribute:: GPU_COUNT
+      :value: 1
+
+      
+
+   .. py:attribute:: IMAGES_PER_GPU
+      :value: 2
+
+      
+
+   .. py:attribute:: STEPS_PER_EPOCH
+      :value: 1000
+
+      
+
+   .. py:attribute:: VALIDATION_STEPS
+      :value: 10
+
+      
+
+   .. py:attribute:: BACKBONE
+      :value: 'resnet101'
+
+      
+
+   .. py:attribute:: COMPUTE_BACKBONE_SHAPE
+
+      
+
+   .. py:attribute:: BACKBONE_STRIDES
+      :value: [4, 8, 16, 32, 64]
+
+      
+
+   .. py:attribute:: FPN_CLASSIF_FC_LAYERS_SIZE
+      :value: 1024
+
+      
+
+   .. py:attribute:: TOP_DOWN_PYRAMID_SIZE
+      :value: 256
+
+      
+
+   .. py:attribute:: NUM_CLASSES
+      :value: 1
+
+      
+
+   .. py:attribute:: RPN_ANCHOR_SCALES
+      :value: (32, 64, 128, 256, 512)
+
+      
+
+   .. py:attribute:: RPN_ANCHOR_RATIOS
+      :value: [0.5, 1, 2]
+
+      
+
+   .. py:attribute:: RPN_ANCHOR_STRIDE
+      :value: 1
+
+      
+
+   .. py:attribute:: RPN_NMS_THRESHOLD
+      :value: 0.7
+
+      
+
+   .. py:attribute:: RPN_TRAIN_ANCHORS_PER_IMAGE
+      :value: 256
+
+      
+
+   .. py:attribute:: PRE_NMS_LIMIT
+      :value: 6000
+
+      
+
+   .. py:attribute:: POST_NMS_ROIS_TRAINING
+      :value: 2000
+
+      
+
+   .. py:attribute:: POST_NMS_ROIS_INFERENCE
+      :value: 1000
+
+      
+
+   .. py:attribute:: USE_MINI_MASK
+      :value: False
+
+      
+
+   .. py:attribute:: MINI_MASK_SHAPE
+      :value: (56, 56)
+
+      
+
+   .. py:attribute:: IMAGE_RESIZE_MODE
+      :value: 'square'
+
+      
+
+   .. py:attribute:: IMAGE_MIN_DIM
+      :value: 1024
+
+      
+
+   .. py:attribute:: IMAGE_MAX_DIM
+      :value: 1024
+
+      
+
+   .. py:attribute:: IMAGE_MIN_SCALE
+      :value: 0
+
+      
+
+   .. py:attribute:: IMAGE_CHANNEL_COUNT
+      :value: 3
+
+      
+
+   .. py:attribute:: MEAN_PIXEL
+
+      
+
+   .. py:attribute:: TRAIN_ROIS_PER_IMAGE
+      :value: 200
+
+      
+
+   .. py:attribute:: ROI_POSITIVE_RATIO
+      :value: 0.33
+
+      
+
+   .. py:attribute:: POOL_SIZE
+      :value: 7
+
+      
+
+   .. py:attribute:: MASK_POOL_SIZE
+      :value: 14
+
+      
+
+   .. py:attribute:: MASK_SHAPE
+      :value: [28, 28]
+
+      
+
+   .. py:attribute:: MAX_GT_INSTANCES
+      :value: 100
+
+      
+
+   .. py:attribute:: RPN_BBOX_STD_DEV
+
+      
+
+   .. py:attribute:: BBOX_STD_DEV
+
+      
+
+   .. py:attribute:: DETECTION_MAX_INSTANCES
+      :value: 35
+
+      
+
+   .. py:attribute:: DETECTION_MIN_CONFIDENCE
+      :value: 0.7
+
+      
+
+   .. py:attribute:: DETECTION_NMS_THRESHOLD
+      :value: 0.3
+
+      
+
+   .. py:attribute:: LEARNING_RATE
+      :value: 0.001
+
+      
+
+   .. py:attribute:: LEARNING_MOMENTUM
+      :value: 0.9
+
+      
+
+   .. py:attribute:: WEIGHT_DECAY
+      :value: 0.0001
+
+      
+
+   .. py:attribute:: LOSS_WEIGHTS
+
+      
+
+   .. py:attribute:: USE_RPN_ROIS
+      :value: True
+
+      
+
+   .. py:attribute:: TRAIN_BN
+      :value: False
+
+      
+
+   .. py:attribute:: GRADIENT_CLIP_NORM
+      :value: 5.0
+
+      
+
+   .. py:method:: to_dict()
+
+
+   .. py:method:: display()
+
+      Display Configuration values.
+
+
+

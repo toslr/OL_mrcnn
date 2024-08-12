@@ -15,22 +15,24 @@ Prerequisites: Python 3.9, Miniconda 3, Fiji
 
 Downloads required: 
 
-- model: 
+- model: https://github.com/toslr/OL_mrcnn
 
-- plugin:
+- plugin here_
+
+.. _here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing
 
 - weight files here_
 
 .. _here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing
 
 
-1. Create conda environment via a terminal, using the environment file provided with the model
+1. Create a conda environment via a terminal, using the .yml file provided with the model
 
 .. code-block::
 
    conda env create -f environment.yml
 
-2. Place the model weights here_ and place them in the folder ``/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
+2. Place the model weights in the folder ``/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
 
 3. Open the ``config.txt`` file in ``OL_MRCNN`` and set:
 
@@ -38,7 +40,7 @@ Downloads required:
 
     - the second line to the path to the ``OL_mrcnn`` folder
 
-4. Move the ``OL_MRCNN`` folder inside the Fiji plugins. Restart Fiji to take into account the changes.
+4. Move the ``OL_segmentation`` plugin folder inside the Fiji plugins. Restart Fiji to take into account the changes.
 
 
 Plugin User Guide

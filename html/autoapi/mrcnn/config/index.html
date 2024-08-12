@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mrcnn.config &mdash; OL_mrcnn 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OL_mrcnn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mrcnn.config</span></code></a><ul>
+<li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#mrcnn.config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li><a class="reference internal" href="#mrcnn.config.Config.NAME"><code class="docutils literal notranslate"><span class="pre">Config.NAME</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.GPU_COUNT"><code class="docutils literal notranslate"><span class="pre">Config.GPU_COUNT</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.IMAGES_PER_GPU"><code class="docutils literal notranslate"><span class="pre">Config.IMAGES_PER_GPU</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.STEPS_PER_EPOCH"><code class="docutils literal notranslate"><span class="pre">Config.STEPS_PER_EPOCH</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.VALIDATION_STEPS"><code class="docutils literal notranslate"><span class="pre">Config.VALIDATION_STEPS</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.BACKBONE"><code class="docutils literal notranslate"><span class="pre">Config.BACKBONE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.COMPUTE_BACKBONE_SHAPE"><code class="docutils literal notranslate"><span class="pre">Config.COMPUTE_BACKBONE_SHAPE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.BACKBONE_STRIDES"><code class="docutils literal notranslate"><span class="pre">Config.BACKBONE_STRIDES</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.FPN_CLASSIF_FC_LAYERS_SIZE"><code class="docutils literal notranslate"><span class="pre">Config.FPN_CLASSIF_FC_LAYERS_SIZE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.TOP_DOWN_PYRAMID_SIZE"><code class="docutils literal notranslate"><span class="pre">Config.TOP_DOWN_PYRAMID_SIZE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.NUM_CLASSES"><code class="docutils literal notranslate"><span class="pre">Config.NUM_CLASSES</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.RPN_ANCHOR_SCALES"><code class="docutils literal notranslate"><span class="pre">Config.RPN_ANCHOR_SCALES</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.RPN_ANCHOR_RATIOS"><code class="docutils literal notranslate"><span class="pre">Config.RPN_ANCHOR_RATIOS</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.RPN_ANCHOR_STRIDE"><code class="docutils literal notranslate"><span class="pre">Config.RPN_ANCHOR_STRIDE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.RPN_NMS_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">Config.RPN_NMS_THRESHOLD</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.RPN_TRAIN_ANCHORS_PER_IMAGE"><code class="docutils literal notranslate"><span class="pre">Config.RPN_TRAIN_ANCHORS_PER_IMAGE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.PRE_NMS_LIMIT"><code class="docutils literal notranslate"><span class="pre">Config.PRE_NMS_LIMIT</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.POST_NMS_ROIS_TRAINING"><code class="docutils literal notranslate"><span class="pre">Config.POST_NMS_ROIS_TRAINING</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.POST_NMS_ROIS_INFERENCE"><code class="docutils literal notranslate"><span class="pre">Config.POST_NMS_ROIS_INFERENCE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.USE_MINI_MASK"><code class="docutils literal notranslate"><span class="pre">Config.USE_MINI_MASK</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.MINI_MASK_SHAPE"><code class="docutils literal notranslate"><span class="pre">Config.MINI_MASK_SHAPE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.IMAGE_RESIZE_MODE"><code class="docutils literal notranslate"><span class="pre">Config.IMAGE_RESIZE_MODE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.IMAGE_MIN_DIM"><code class="docutils literal notranslate"><span class="pre">Config.IMAGE_MIN_DIM</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.IMAGE_MAX_DIM"><code class="docutils literal notranslate"><span class="pre">Config.IMAGE_MAX_DIM</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.IMAGE_MIN_SCALE"><code class="docutils literal notranslate"><span class="pre">Config.IMAGE_MIN_SCALE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.IMAGE_CHANNEL_COUNT"><code class="docutils literal notranslate"><span class="pre">Config.IMAGE_CHANNEL_COUNT</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.MEAN_PIXEL"><code class="docutils literal notranslate"><span class="pre">Config.MEAN_PIXEL</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.TRAIN_ROIS_PER_IMAGE"><code class="docutils literal notranslate"><span class="pre">Config.TRAIN_ROIS_PER_IMAGE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.ROI_POSITIVE_RATIO"><code class="docutils literal notranslate"><span class="pre">Config.ROI_POSITIVE_RATIO</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.POOL_SIZE"><code class="docutils literal notranslate"><span class="pre">Config.POOL_SIZE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.MASK_POOL_SIZE"><code class="docutils literal notranslate"><span class="pre">Config.MASK_POOL_SIZE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.MASK_SHAPE"><code class="docutils literal notranslate"><span class="pre">Config.MASK_SHAPE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.MAX_GT_INSTANCES"><code class="docutils literal notranslate"><span class="pre">Config.MAX_GT_INSTANCES</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.RPN_BBOX_STD_DEV"><code class="docutils literal notranslate"><span class="pre">Config.RPN_BBOX_STD_DEV</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.BBOX_STD_DEV"><code class="docutils literal notranslate"><span class="pre">Config.BBOX_STD_DEV</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.DETECTION_MAX_INSTANCES"><code class="docutils literal notranslate"><span class="pre">Config.DETECTION_MAX_INSTANCES</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.DETECTION_MIN_CONFIDENCE"><code class="docutils literal notranslate"><span class="pre">Config.DETECTION_MIN_CONFIDENCE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.DETECTION_NMS_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">Config.DETECTION_NMS_THRESHOLD</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.LEARNING_RATE"><code class="docutils literal notranslate"><span class="pre">Config.LEARNING_RATE</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.LEARNING_MOMENTUM"><code class="docutils literal notranslate"><span class="pre">Config.LEARNING_MOMENTUM</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.WEIGHT_DECAY"><code class="docutils literal notranslate"><span class="pre">Config.WEIGHT_DECAY</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.LOSS_WEIGHTS"><code class="docutils literal notranslate"><span class="pre">Config.LOSS_WEIGHTS</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.USE_RPN_ROIS"><code class="docutils literal notranslate"><span class="pre">Config.USE_RPN_ROIS</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.TRAIN_BN"><code class="docutils literal notranslate"><span class="pre">Config.TRAIN_BN</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.GRADIENT_CLIP_NORM"><code class="docutils literal notranslate"><span class="pre">Config.GRADIENT_CLIP_NORM</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.to_dict"><code class="docutils literal notranslate"><span class="pre">Config.to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#mrcnn.config.Config.display"><code class="docutils literal notranslate"><span class="pre">Config.display()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OL_mrcnn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mrcnn.config</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/mrcnn/config/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-mrcnn.config">
+<span id="mrcnn-config"></span><h1><a class="reference internal" href="#module-mrcnn.config" title="mrcnn.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mrcnn.config</span></code></a><a class="headerlink" href="#module-mrcnn.config" title="Link to this heading"></a></h1>
+<p>Mask R-CNN
+Base Configurations class.</p>
+<p>Copyright (c) 2017 Matterport, Inc.
+Licensed under the MIT License (see LICENSE for details)
+Written by Waleed Abdulla</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mrcnn.config.Config" title="mrcnn.config.Config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Config</span></code></a></p></td>
+<td><p>Base configuration class. For custom configurations, create a</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="mrcnn.config.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mrcnn.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#mrcnn.config.Config" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base configuration class. For custom configurations, create a
+sub-class that inherits from this one and override properties
+that need to be changed.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><a class="headerlink" href="#mrcnn.config.Config.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.GPU_COUNT">
+<span class="sig-name descname"><span class="pre">GPU_COUNT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#mrcnn.config.Config.GPU_COUNT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.IMAGES_PER_GPU">
+<span class="sig-name descname"><span class="pre">IMAGES_PER_GPU</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#mrcnn.config.Config.IMAGES_PER_GPU" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.STEPS_PER_EPOCH">
+<span class="sig-name descname"><span class="pre">STEPS_PER_EPOCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#mrcnn.config.Config.STEPS_PER_EPOCH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.VALIDATION_STEPS">
+<span class="sig-name descname"><span class="pre">VALIDATION_STEPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#mrcnn.config.Config.VALIDATION_STEPS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.BACKBONE">
+<span class="sig-name descname"><span class="pre">BACKBONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'resnet101'</span></em><a class="headerlink" href="#mrcnn.config.Config.BACKBONE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.COMPUTE_BACKBONE_SHAPE">
+<span class="sig-name descname"><span class="pre">COMPUTE_BACKBONE_SHAPE</span></span><a class="headerlink" href="#mrcnn.config.Config.COMPUTE_BACKBONE_SHAPE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.BACKBONE_STRIDES">
+<span class="sig-name descname"><span class="pre">BACKBONE_STRIDES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[4,</span> <span class="pre">8,</span> <span class="pre">16,</span> <span class="pre">32,</span> <span class="pre">64]</span></em><a class="headerlink" href="#mrcnn.config.Config.BACKBONE_STRIDES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.FPN_CLASSIF_FC_LAYERS_SIZE">
+<span class="sig-name descname"><span class="pre">FPN_CLASSIF_FC_LAYERS_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1024</span></em><a class="headerlink" href="#mrcnn.config.Config.FPN_CLASSIF_FC_LAYERS_SIZE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.TOP_DOWN_PYRAMID_SIZE">
+<span class="sig-name descname"><span class="pre">TOP_DOWN_PYRAMID_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">256</span></em><a class="headerlink" href="#mrcnn.config.Config.TOP_DOWN_PYRAMID_SIZE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.NUM_CLASSES">
+<span class="sig-name descname"><span class="pre">NUM_CLASSES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#mrcnn.config.Config.NUM_CLASSES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.RPN_ANCHOR_SCALES">
+<span class="sig-name descname"><span class="pre">RPN_ANCHOR_SCALES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(32,</span> <span class="pre">64,</span> <span class="pre">128,</span> <span class="pre">256,</span> <span class="pre">512)</span></em><a class="headerlink" href="#mrcnn.config.Config.RPN_ANCHOR_SCALES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.RPN_ANCHOR_RATIOS">
+<span class="sig-name descname"><span class="pre">RPN_ANCHOR_RATIOS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.5,</span> <span class="pre">1,</span> <span class="pre">2]</span></em><a class="headerlink" href="#mrcnn.config.Config.RPN_ANCHOR_RATIOS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.RPN_ANCHOR_STRIDE">
+<span class="sig-name descname"><span class="pre">RPN_ANCHOR_STRIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#mrcnn.config.Config.RPN_ANCHOR_STRIDE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.RPN_NMS_THRESHOLD">
+<span class="sig-name descname"><span class="pre">RPN_NMS_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.7</span></em><a class="headerlink" href="#mrcnn.config.Config.RPN_NMS_THRESHOLD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.RPN_TRAIN_ANCHORS_PER_IMAGE">
+<span class="sig-name descname"><span class="pre">RPN_TRAIN_ANCHORS_PER_IMAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">256</span></em><a class="headerlink" href="#mrcnn.config.Config.RPN_TRAIN_ANCHORS_PER_IMAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.PRE_NMS_LIMIT">
+<span class="sig-name descname"><span class="pre">PRE_NMS_LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6000</span></em><a class="headerlink" href="#mrcnn.config.Config.PRE_NMS_LIMIT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.POST_NMS_ROIS_TRAINING">
+<span class="sig-name descname"><span class="pre">POST_NMS_ROIS_TRAINING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2000</span></em><a class="headerlink" href="#mrcnn.config.Config.POST_NMS_ROIS_TRAINING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.POST_NMS_ROIS_INFERENCE">
+<span class="sig-name descname"><span class="pre">POST_NMS_ROIS_INFERENCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#mrcnn.config.Config.POST_NMS_ROIS_INFERENCE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.USE_MINI_MASK">
+<span class="sig-name descname"><span class="pre">USE_MINI_MASK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#mrcnn.config.Config.USE_MINI_MASK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.MINI_MASK_SHAPE">
+<span class="sig-name descname"><span class="pre">MINI_MASK_SHAPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(56,</span> <span class="pre">56)</span></em><a class="headerlink" href="#mrcnn.config.Config.MINI_MASK_SHAPE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.IMAGE_RESIZE_MODE">
+<span class="sig-name descname"><span class="pre">IMAGE_RESIZE_MODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'square'</span></em><a class="headerlink" href="#mrcnn.config.Config.IMAGE_RESIZE_MODE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.IMAGE_MIN_DIM">
+<span class="sig-name descname"><span class="pre">IMAGE_MIN_DIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1024</span></em><a class="headerlink" href="#mrcnn.config.Config.IMAGE_MIN_DIM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.IMAGE_MAX_DIM">
+<span class="sig-name descname"><span class="pre">IMAGE_MAX_DIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1024</span></em><a class="headerlink" href="#mrcnn.config.Config.IMAGE_MAX_DIM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.IMAGE_MIN_SCALE">
+<span class="sig-name descname"><span class="pre">IMAGE_MIN_SCALE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#mrcnn.config.Config.IMAGE_MIN_SCALE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.IMAGE_CHANNEL_COUNT">
+<span class="sig-name descname"><span class="pre">IMAGE_CHANNEL_COUNT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#mrcnn.config.Config.IMAGE_CHANNEL_COUNT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.MEAN_PIXEL">
+<span class="sig-name descname"><span class="pre">MEAN_PIXEL</span></span><a class="headerlink" href="#mrcnn.config.Config.MEAN_PIXEL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.TRAIN_ROIS_PER_IMAGE">
+<span class="sig-name descname"><span class="pre">TRAIN_ROIS_PER_IMAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">200</span></em><a class="headerlink" href="#mrcnn.config.Config.TRAIN_ROIS_PER_IMAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.ROI_POSITIVE_RATIO">
+<span class="sig-name descname"><span class="pre">ROI_POSITIVE_RATIO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.33</span></em><a class="headerlink" href="#mrcnn.config.Config.ROI_POSITIVE_RATIO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.POOL_SIZE">
+<span class="sig-name descname"><span class="pre">POOL_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#mrcnn.config.Config.POOL_SIZE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.MASK_POOL_SIZE">
+<span class="sig-name descname"><span class="pre">MASK_POOL_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#mrcnn.config.Config.MASK_POOL_SIZE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.MASK_SHAPE">
+<span class="sig-name descname"><span class="pre">MASK_SHAPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[28,</span> <span class="pre">28]</span></em><a class="headerlink" href="#mrcnn.config.Config.MASK_SHAPE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.MAX_GT_INSTANCES">
+<span class="sig-name descname"><span class="pre">MAX_GT_INSTANCES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="headerlink" href="#mrcnn.config.Config.MAX_GT_INSTANCES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.RPN_BBOX_STD_DEV">
+<span class="sig-name descname"><span class="pre">RPN_BBOX_STD_DEV</span></span><a class="headerlink" href="#mrcnn.config.Config.RPN_BBOX_STD_DEV" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.BBOX_STD_DEV">
+<span class="sig-name descname"><span class="pre">BBOX_STD_DEV</span></span><a class="headerlink" href="#mrcnn.config.Config.BBOX_STD_DEV" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.DETECTION_MAX_INSTANCES">
+<span class="sig-name descname"><span class="pre">DETECTION_MAX_INSTANCES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35</span></em><a class="headerlink" href="#mrcnn.config.Config.DETECTION_MAX_INSTANCES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.DETECTION_MIN_CONFIDENCE">
+<span class="sig-name descname"><span class="pre">DETECTION_MIN_CONFIDENCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.7</span></em><a class="headerlink" href="#mrcnn.config.Config.DETECTION_MIN_CONFIDENCE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.DETECTION_NMS_THRESHOLD">
+<span class="sig-name descname"><span class="pre">DETECTION_NMS_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.3</span></em><a class="headerlink" href="#mrcnn.config.Config.DETECTION_NMS_THRESHOLD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.LEARNING_RATE">
+<span class="sig-name descname"><span class="pre">LEARNING_RATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.001</span></em><a class="headerlink" href="#mrcnn.config.Config.LEARNING_RATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.LEARNING_MOMENTUM">
+<span class="sig-name descname"><span class="pre">LEARNING_MOMENTUM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.9</span></em><a class="headerlink" href="#mrcnn.config.Config.LEARNING_MOMENTUM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.WEIGHT_DECAY">
+<span class="sig-name descname"><span class="pre">WEIGHT_DECAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0001</span></em><a class="headerlink" href="#mrcnn.config.Config.WEIGHT_DECAY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.LOSS_WEIGHTS">
+<span class="sig-name descname"><span class="pre">LOSS_WEIGHTS</span></span><a class="headerlink" href="#mrcnn.config.Config.LOSS_WEIGHTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.USE_RPN_ROIS">
+<span class="sig-name descname"><span class="pre">USE_RPN_ROIS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#mrcnn.config.Config.USE_RPN_ROIS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.TRAIN_BN">
+<span class="sig-name descname"><span class="pre">TRAIN_BN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#mrcnn.config.Config.TRAIN_BN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mrcnn.config.Config.GRADIENT_CLIP_NORM">
+<span class="sig-name descname"><span class="pre">GRADIENT_CLIP_NORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5.0</span></em><a class="headerlink" href="#mrcnn.config.Config.GRADIENT_CLIP_NORM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mrcnn.config.Config.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.config.Config.to_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mrcnn.config.Config.display">
+<span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mrcnn.config.Config.display" title="Link to this definition"></a></dt>
+<dd><p>Display Configuration values.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tom Soulaire.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

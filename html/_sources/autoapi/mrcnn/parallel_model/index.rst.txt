@@ -1,0 +1,78 @@
+:py:mod:`mrcnn.parallel_model`
+==============================
+
+.. py:module:: mrcnn.parallel_model
+
+.. autoapi-nested-parse::
+
+   Mask R-CNN
+   Multi-GPU Support for Keras.
+
+   Copyright (c) 2017 Matterport, Inc.
+   Licensed under the MIT License (see LICENSE for details)
+   Written by Waleed Abdulla
+
+   Ideas and a small code snippets from these sources:
+   https://github.com/fchollet/keras/issues/2436
+   https://medium.com/@kuza55/transparent-multi-gpu-training-on-tensorflow-with-keras-8b0016fd9012
+   https://github.com/avolkov1/keras_experiments/blob/master/keras_exp/multigpu/
+   https://github.com/fchollet/keras/blob/master/keras/utils/training_utils.py
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mrcnn.parallel_model.ParallelModel
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   mrcnn.parallel_model.GPU_COUNT
+
+
+.. py:class:: ParallelModel(keras_model, gpu_count)
+
+
+   Bases: :py:obj:`tensorflow.keras.models.Model`
+
+   Subclasses the standard Keras Model and adds multi-GPU support.
+   It works by creating a copy of the model on each GPU. Then it slices
+   the inputs and sends a slice to each copy of the model, and then
+   merges the outputs together and applies the loss on the combined
+   outputs.
+
+   .. py:method:: __getattribute__(attrname)
+
+      Redirect loading and saving methods to the inner model. That's where
+      the weights are stored.
+
+
+   .. py:method:: summary(*args, **kwargs)
+
+      Override summary() to display summaries of both, the wrapper
+      and inner models.
+
+
+   .. py:method:: make_parallel()
+
+      Creates a new wrapper model that consists of multiple replicas of
+      the original model placed on different GPUs.
+
+
+
+.. py:data:: GPU_COUNT
+   :value: 2
+
+   
+

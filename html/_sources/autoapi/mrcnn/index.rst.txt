@@ -1,0 +1,19 @@
+:py:mod:`mrcnn`
+===============
+
+.. py:module:: mrcnn
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   config/index.rst
+   model/index.rst
+   parallel_model/index.rst
+   utils/index.rst
+   visualize/index.rst
+
+
