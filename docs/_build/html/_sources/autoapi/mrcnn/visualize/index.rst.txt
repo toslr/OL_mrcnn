@@ -75,7 +75,7 @@ Attributes
        
 
 
-.. py:function:: display_instances(image, boxes, masks, class_ids, class_names, scores=None, title='', figsize=(16, 16), figAx=None, show_mask=True, show_bbox=True, show_caption=True, colors=None, captions=None)
+.. py:function:: display_instances(image, boxes, masks, class_ids, class_names, scores=None, title='', figsize=(16, 16), figAx=None, show_mask=True, show_bbox=True, show_caption=True, colors=None, captions=None, save_fig=None)
 
    boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
    masks: [height, width, num_instances]

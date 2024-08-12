@@ -5,40 +5,63 @@
 
 Introduction
 ====================================
-This tool is a model based on a MRCNN architecture that enables to 
 
-- detect and crop cells in an image (grayscale, RGB, or more channels)
-
-- classify cells in an image
-
-- segment cells in an image
-
-
+This is an introduction guide to setup and use a Fiji plugin for oligodendrocyte segmentation.
 
 Installation
-============
+====================================
 
-To install the model on a local machine (requiring Python 3.9):
+Prerequisites: Python 3.9, Miniconda 3, Fiji
 
-1. create conda environment:
+Downloads required: 
+
+- model: https://github.com/toslr/OL_mrcnn
+
+- plugin here_
+
+.. _here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing
+
+- weight files here_
+
+.. _here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing
+
+
+1. Create a conda environment via a terminal, using the .yml file provided with the model
 
 .. code-block::
 
    conda env create -f environment.yml
 
-2. activate conda environment:
+2. Place the model weights in the folder ``/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
 
-.. code-block::
+3. Open the ``config.txt`` file in ``OL_MRCNN`` and set:
 
-   conda activate OL_mrcnn
+    - the first line to the path to the environmental python
 
-3. download the model weights here_ and place them in the folder ``/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset.
+    - the second line to the path to the ``OL_mrcnn`` folder
 
-.. _here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing
+4. Move the ``OL_segmentation`` plugin folder inside the Fiji plugins. Restart Fiji to take into account the changes.
 
 
-User Guide
-==========
+Plugin User Guide
+=================
+
+Launch the Fiji plugin. A window should pop. Warning: the images should be already preprocessed to the right format. Report to the last section to preprocess your images.
+
+- Select the task you want to achieve.
+- Choose the dataset you want to process.
+- Select the color channels.
+- Select the weight file you want to use. Click Other to choose your own.
+- Choose a name for the task. it will be the name of the results folder. 
+- Adjust the confidence and non-maximum suppression thresholds and the GPU usage.
+- Choose whether you want to visualize and edit the results.
+- Finish
+
+If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click 'Finish' to save the changes.
+
+
+Python User Guide
+=================
 
 Image cropping
 --------------
