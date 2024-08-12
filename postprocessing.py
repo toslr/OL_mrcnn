@@ -1,6 +1,8 @@
 import numpy as np
 import os
 import cv2
+import pandas as pd
+import argparse
 
 def detect_overlap(bboxes):
     """List overlaps between the bounding boxes."""
@@ -32,6 +34,25 @@ def nms_suppression_multi(results,threshold):
                     'scores':r['scores'][~remove_index]}]
     return new_results
 
+def crop_from_csv(csv_results,img_dir,res_dir):
+    """Crop ROIs in images from csv results"""
+    results = pd.read_csv(csv_results)
+    results['detection_id'] = [i+1 for i in range(len(results))]
+    results.to_csv(csv_results,index=False)
+    image_names = sorted(results['image_name'].unique())
+    for file in os.listdir(res_dir):
+        if file.endswith('.tif'):
+            os.remove(os.path.join(res_dir,file))
+    for image_name in image_names:
+        detection_ids = results[results['image_name']==image_name]['detection_id'].values
+        classes = results[results['image_name']==image_name]['class'].values
+        str_rois = results[results['image_name']==image_name]['bbox'].values
+        rois =[[int(coord) for coord in str_roi.strip('[]').split()] for str_roi in str_rois]
+        image = cv2.imread(os.path.join(img_dir,image_name))
+        for i in range(len(detection_ids)):
+            cv2.imwrite(os.path.join(res_dir,f'{detection_ids[i]:04d}_'+classes[i]+'.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
+
+
 def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,modify_results=False,save_images=False):
     """Crop ROIs from image using the results, and correct ROIs to display only 1 object in the cropped region."""
     overlaps = detect_overlap(results[0]['rois'])
@@ -42,7 +63,7 @@ def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,
     if not modify_results:
         for i in range(r['masks'].shape[2]):
             class_name = class_names[r['class_ids'][i]]
-            res_list.append([os.path.basename(image_path), i, class_names[r['class_ids'][i]], r['scores'][i], r['rois'][i]])
+            res_list.append([os.path.basename(image_path), len(res_list), class_names[r['class_ids'][i]], r['scores'][i], r['rois'][i]])
             cropped_img = image[r['rois'][i][0]:r['rois'][i][2], r['rois'][i][1]:r['rois'][i][3]]
             if save_images:
                 cv2.imwrite(os.path.join(img_res_dir, os.path.basename(image_path)[:-3] + f'{i:04d}_' + class_name + '.tif'), cropped_img)
@@ -50,7 +71,7 @@ def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,
     else:
         for i in range(r['masks'].shape[2]):
             class_name = class_names[r['class_ids'][i]]
-            res_list.append([os.path.basename(image_path), i, class_names[r['class_ids'][i]], r['scores'][i], r['rois'][i]])
+            res_list.append([os.path.basename(image_path), len(res_list), class_names[r['class_ids'][i]], r['scores'][i], r['rois'][i]])
             overlaps_with_i = [pair[1] if pair[0]==i else pair[0] for pair in overlaps if pair[0]==i or pair[1]==i]
             modified_image = image.copy()
             
@@ -64,3 +85,11 @@ def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,
             if save_images:
                 cv2.imwrite(os.path.join(img_res_dir, os.path.basename(image_path)[:-3] + f'{i:04d}_' + class_name + '.tif'), cropped_img)
     return res_list
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--csv', type=str, help='Path to the csv file containing the results')
+    parser.add_argument('--img_dir', type=str, help='Path to the directory containing the images')
+    parser.add_argument('--res_dir', type=str, help='Path to the directory where the cropped images will be saved')
+    args = parser.parse_args()
+    crop_from_csv(args.csv, args.img_dir, args.res_dir)
