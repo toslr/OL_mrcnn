@@ -53,34 +53,33 @@ def main():
     parser.add_argument('--data', type=str, default='data/test/imgs', help='Directory containing test images')
     parser.add_argument('--gray', type=bool, default=False, help='Whether to convert images to grayscale')
     parser.add_argument('--edit', type=bool, default=False, help='Whether to visualize and edit the results')
-    parser.add_argument('--multiclass', type=bool, default=True, help='Whether to use the multiclass model')
+    parser.add_argument('--multiclass', type=bool, default=False, help='Whether to use the multiclass model')
     parser.add_argument('--save', type=bool, default=True, help='Whether to save the crops')
     args = parser.parse_args()
 
     TEST_DIR = args.data
     GRAYSCALE = args.gray
-    if args.multiclass:
-        from custom_multi import CustomConfig, CustomDataset
-    else:
-        from custom import CustomConfig, CustomDataset
+    #if args.multiclass:
+    #    from custom_multi import CustomConfig, CustomDataset
+    #else:
+    from custom import CustomConfig, CustomDataset
 
-    class InferenceConfigMulti(CustomConfig):
+    class InferenceConfig(CustomConfig):
         DEVICE = args.device
         GPU_COUNT = args.g
         IMAGES_PER_GPU = args.batch
         DETECTION_MIN_CONFIDENCE = args.ci #Minimum probability value to accept a detected instance
         DETECTION_NMS_THRESHOLD = args.nms # Non-maximum suppression threshold for detection
 
-    inference_config_multi = InferenceConfigMulti()
+    inference_config = InferenceConfig()
     macro_model = modellib.MaskRCNN(mode="inference",
-                                config=inference_config_multi,
+                                config=inference_config,
                                 model_dir=DEFAULT_LOGS_DIR)
 
     macro_model_path = os.path.join(DEFAULT_LOGS_DIR, args.weights)
 
     print("Loading macro weights from ", macro_model_path)
     tf.keras.Model.load_weights(macro_model.keras_model, macro_model_path , by_name=True, skip_mismatch=True)
-    print('a')
     RESULTS_NAME = args.name
     RESULTS_DIR = os.path.join(ROOT_DIR, "results", RESULTS_NAME)
     os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -89,18 +88,15 @@ def main():
     dataset_val = CustomDataset()
     dataset_val.load_custom(os.path.join(ROOT_DIR,"data"), "valid")
     dataset_val.prepare()
-    print('b')
     image_paths = []
     for filename in sorted(os.listdir(TEST_DIR)):
         if filename.endswith(".tif"):
             image_paths.append(os.path.join(TEST_DIR, filename))
 
-    print('c')
-    print(len(image_paths))
     res_list = []
     for image_path in image_paths:
-        original_img = skimage.io.imread(image_path)
         print(image_path)
+        original_img = skimage.io.imread(image_path)
         # PREPROCESSING STEP TO GET IMAGES IN THE EXPECTED FORMAT
         if GRAYSCALE:
             float_gray_img = skimage.io.imread(image_path, as_gray=True)
@@ -120,6 +116,7 @@ def main():
         macro_results = macro_model.detect([img_norm], verbose=0)
         macro_results = nms_suppression_multi(macro_results, args.nms)
         r = macro_results[0]
+        print(len(r['rois']))
         for i in range(len(r['rois'])):
             res_list.append([os.path.basename(image_path), 
                              len(res_list)+1, 
