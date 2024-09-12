@@ -34,11 +34,11 @@ Downloads required:
 
 2. Place the model weights in the folder ``/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
 
-3. Open the ``config.txt`` file in ``OL_MRCNN`` and set:
+3. Open the ``config.txt`` file in the ``OL_segmentation`` folder and set:
 
     - the first line to the path to the environmental python
 
-    - the second line to the path to the ``OL_mrcnn`` folder
+    - the second line to the path to the ``OL_mrcnn-main`` folder
 
 4. Move the ``OL_segmentation`` plugin folder inside the Fiji plugins. Restart Fiji to take into account the changes.
 
@@ -55,7 +55,7 @@ Launch the Fiji plugin. A window should pop. Warning: the images should be alrea
 - Choose a name for the task. it will be the name of the results folder. 
 - Adjust the confidence and non-maximum suppression thresholds and the GPU usage.
 - Choose whether you want to visualize and edit the results.
-- Finish
+- Finish.
 
 If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click 'Finish' to save the changes.
 

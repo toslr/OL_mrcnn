@@ -17,7 +17,8 @@ def czi_to_tiff(czi_folder,save_path):
                 image = czi.get_image_data("CZYX", S=0, T=0, Z=0)
                 image = np.squeeze(image)
                 image = np.moveaxis(image, 0, -1)
-                tiff.imwrite(os.path.join(save_path,file.replace('.czi','.tif')),image)
+                image[...,2] = 0
+                tiff.imwrite(os.path.join(save_path,file.replace('.czi','.tif')),image[...,:3])
 
 def ometifs_to_tifs(dir_path, save_path):
     """converts ome-tifs to tifs"""
@@ -64,12 +65,12 @@ if __name__ == '__main__':
     data_path = args.data
 
     if args.type == 'czi':
-        output_path = data_path + 'tiff'
+        output_path = data_path + '_tiff'
         czi_to_tiff(data_path, output_path)
     elif args.type == 'ome-tif':
-        output_path = data_path + 'tiff'
+        output_path = data_path + '_tiff'
         ometifs_to_tifs(data_path, output_path)
     else:
         output_path = data_path
     
-    normalize_images(output_path, data_path+'_norm', args.gray,args.clip)
+    normalize_images(output_path, data_path+'_norm', args.gray, args.clip)

@@ -35,6 +35,7 @@ import mrcnn.model as modellib
 from mrcnn.model import log
 from mrcnn.config import Config
 from mrcnn import model as modellib, utils
+from preprocessing import czi_to_tiff, ometifs_to_tifs, normalize_images
 from postprocessing import nms_suppression_multi, crop_from_csv, crop_from_results
 
 def main():
@@ -54,15 +55,34 @@ def main():
     parser.add_argument('--gray', type=bool, default=False, help='Whether to convert images to grayscale')
     parser.add_argument('--edit', type=bool, default=False, help='Whether to visualize and edit the results')
     parser.add_argument('--multiclass', type=bool, default=False, help='Whether to use the multiclass model')
+    parser.add_argument('--prep', type=bool, default=False, help='Whether to preprocess the folder of images')
     parser.add_argument('--save', type=bool, default=True, help='Whether to save the crops')
     args = parser.parse_args()
 
-    TEST_DIR = args.data
+    IMG_DIR = args.data
     GRAYSCALE = args.gray
-    #if args.multiclass:
-    #    from custom_multi import CustomConfig, CustomDataset
-    #else:
-    from custom import CustomConfig, CustomDataset
+
+    if args.prep:
+        for file in os.listdir(IMG_DIR):
+            if file.endswith('.ome.tif'):
+                ometifs_to_tifs(IMG_DIR,IMG_DIR+'_tiff')
+                normalize_images(IMG_DIR+'_tiff',IMG_DIR+'_norm', GRAYSCALE)
+                IMG_DIR = IMG_DIR+'_norm'
+                break
+            if file.endswith('.czi'):
+                czi_to_tiff(IMG_DIR,IMG_DIR+'_tiff')
+                normalize_images(IMG_DIR+'_tiff',IMG_DIR+'_norm', GRAYSCALE)
+                IMG_DIR = IMG_DIR+'_norm'
+                break
+            if file.endswith('.tiff'):
+                normalize_images(IMG_DIR,IMG_DIR+'_norm', GRAYSCALE)
+                IMG_DIR = IMG_DIR+'_norm'
+                break
+    
+    if args.multiclass:
+        from custom_multi import CustomConfig, CustomDataset
+    else:
+        from custom import CustomConfig, CustomDataset
 
     class InferenceConfig(CustomConfig):
         DEVICE = args.device
@@ -88,10 +108,11 @@ def main():
     dataset_val = CustomDataset()
     dataset_val.load_custom(os.path.join(ROOT_DIR,"data"), "valid")
     dataset_val.prepare()
+
     image_paths = []
-    for filename in sorted(os.listdir(TEST_DIR)):
+    for filename in sorted(os.listdir(IMG_DIR)):
         if filename.endswith(".tif"):
-            image_paths.append(os.path.join(TEST_DIR, filename))
+            image_paths.append(os.path.join(IMG_DIR, filename))
 
     res_list = []
     for image_path in image_paths:
@@ -126,7 +147,7 @@ def main():
 
     res_df = pd.DataFrame(res_list, columns=['image_name', 'detection_id', 'class', 'score', 'bbox'])
     res_df.to_csv(os.path.join(RESULTS_DIR, 'results.csv'), index=False)
-    crop_from_csv(os.path.join(RESULTS_DIR, 'results.csv'), TEST_DIR, RESULTS_DIR)
+    crop_from_csv(os.path.join(RESULTS_DIR, 'results.csv'), IMG_DIR, RESULTS_DIR)
 
 
 if __name__ == '__main__':
