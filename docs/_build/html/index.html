@@ -96,24 +96,25 @@
 <p>Downloads required:</p>
 <ul class="simple">
 <li><p>model: <a class="reference external" href="https://github.com/toslr/OL_mrcnn">https://github.com/toslr/OL_mrcnn</a></p></li>
-<li><p>plugin <a class="reference external" href="https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing">here</a></p></li>
-</ul>
-<ul class="simple">
-<li><p>weight files <a class="reference external" href="https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing">here</a></p></li>
+<li><p>plugin and weight files <a class="reference external" href="https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing">here</a></p></li>
 </ul>
 <ol class="arabic simple">
-<li><p>Create a conda environment via a terminal, using the .yml file provided with the model</p></li>
+<li><p>From a terminal, place yourself in the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> model folder. Create a conda environment using the .yml file:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
 </pre></div>
 </div>
 <ol class="arabic" start="2">
 <li><p>Place the model weights in the folder <code class="docutils literal notranslate"><span class="pre">/logs</span></code>. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.</p></li>
-<li><p>Open the <code class="docutils literal notranslate"><span class="pre">config.txt</span></code> file in <code class="docutils literal notranslate"><span class="pre">OL_MRCNN</span></code> and set:</p>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">config.txt</span></code> file in the <code class="docutils literal notranslate"><span class="pre">OL_segmentation</span></code> folder and set:</p>
 <blockquote>
-<div><ul class="simple">
-<li><p>the first line to the path to the environmental python</p></li>
-<li><p>the second line to the path to the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn</span></code> folder</p></li>
+<div><ul>
+<li><p>the first line to the path to the environmental python. You can use the following command to find it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">info</span> <span class="o">--</span><span class="n">envs</span>
+</pre></div>
+</div>
+</li>
+<li><p>the second line to the path to the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> folder</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -122,16 +123,17 @@
 </section>
 <section id="plugin-user-guide">
 <h1>Plugin User Guide<a class="headerlink" href="#plugin-user-guide" title="Link to this heading"></a></h1>
-<p>Launch the Fiji plugin. A window should pop. Warning: the images should be already preprocessed to the right format. Report to the last section to preprocess your images.</p>
+<p>Launch the Fiji plugin. A window should pop.</p>
 <ul class="simple">
 <li><p>Select the task you want to achieve.</p></li>
 <li><p>Choose the dataset you want to process.</p></li>
 <li><p>Select the color channels.</p></li>
 <li><p>Select the weight file you want to use. Click Other to choose your own.</p></li>
 <li><p>Choose a name for the task. it will be the name of the results folder.</p></li>
-<li><p>Adjust the confidence and non-maximum suppression thresholds and the GPU usage.</p></li>
-<li><p>Choose whether you want to visualize and edit the results.</p></li>
-<li><p>Finish</p></li>
+<li><p>Adjust the confidence and non-maximum suppression thresholds.</p></li>
+<li><p>Choose if you want to preprocess your images. The model can run only from tiff images, the preprocessing will convert the images to tiff.</p></li>
+<li><p>Choose whether you want to visualize and edit the results, and if you want to save the crops.</p></li>
+<li><p>Finish.</p></li>
 </ul>
 <p>If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click ‘Finish’ to save the changes.</p>
 </section>
@@ -195,13 +197,13 @@
 <ul class="simple">
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">/data</span></code> folder in the root directory.</p></li>
 <li><p>Inside the <code class="docutils literal notranslate"><span class="pre">/data</span></code> directory, put your images in a folder named <code class="docutils literal notranslate"><span class="pre">/imgs</span></code> and your binary masks in a folder named <code class="docutils literal notranslate"><span class="pre">/masks</span></code>. The name, size and format of the masks must match the images.</p></li>
-<li><p>In the <a href="#id2"><span class="problematic" id="id3">``</span></a>roi_labels_to_json.py``script, configure the <a href="#id4"><span class="problematic" id="id5">``</span></a>dir_path``in the <cite>main()</cite> function. Run in a terminal:</p></li>
+<li><p>In the <a href="#id1"><span class="problematic" id="id2">``</span></a>roi_labels_to_json.py``script, configure the <a href="#id3"><span class="problematic" id="id4">``</span></a>dir_path``in the <cite>main()</cite> function. Run in a terminal:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">roi_labels_to_json</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Move the label files to a <code class="docutils literal notranslate"><span class="pre">jsons</span></code> folder in the <a href="#id6"><span class="problematic" id="id7">``</span></a>/data``directory.</p></li>
+<li><p>Move the label files to a <code class="docutils literal notranslate"><span class="pre">jsons</span></code> folder in the <a href="#id5"><span class="problematic" id="id6">``</span></a>/data``directory.</p></li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">format_data.py</span></code> script, configure the <code class="docutils literal notranslate"><span class="pre">dir_path</span></code> in the <cite>main()</cite> function. Configure the size the of the training / validation / test datasets (usually 0.6, 0.2, 0.2) Run in a terminal:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">format_data</span><span class="o">.</span><span class="n">py</span>
@@ -227,7 +229,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">DEVICE</span></code>: device to use for training. Default value is ‘cpu:0’.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">MAX_GT_INSTANCES</span></code>: maximum number of instances in the ground truth. Default value is 100.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">DETECTION_MAX_INSTANCES</span></code>: maximum number of instances in the detections. Default value is 35.</p></li>
-<li><p>in the <a href="#id8"><span class="problematic" id="id9">``</span></a>CustomDataset``class, modify or add lines :</p></li>
+<li><p>in the <a href="#id7"><span class="problematic" id="id8">``</span></a>CustomDataset``class, modify or add lines :</p></li>
 </ul>
 </dd>
 </dl>
