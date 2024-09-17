@@ -39,6 +39,7 @@ from preprocessing import czi_to_tiff, ometifs_to_tifs, normalize_images
 from postprocessing import nms_suppression_multi, crop_from_csv, crop_from_results
 
 def main():
+    print("Command line arguments:", ' '.join(sys.argv))
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) #os.getcwd()
     sys.path.append(ROOT_DIR)  # To find local version of the library
     DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
@@ -52,11 +53,11 @@ def main():
     parser.add_argument('--weights', type=str, default='mask_rcnn_coco.h5', help='Subpath to weights file')
     parser.add_argument('--name', type=str, default='results0', help='Name of results directory')
     parser.add_argument('--data', type=str, default='data/test/imgs', help='Directory containing test images')
-    parser.add_argument('--gray', type=bool, default=False, help='Whether to convert images to grayscale')
-    parser.add_argument('--edit', type=bool, default=False, help='Whether to visualize and edit the results')
-    parser.add_argument('--multiclass', type=bool, default=False, help='Whether to use the multiclass model')
-    parser.add_argument('--prep', type=bool, default=False, help='Whether to preprocess the folder of images')
-    parser.add_argument('--save', type=bool, default=True, help='Whether to save the crops')
+    parser.add_argument('--gray', action='store_true', help='Whether to convert images to grayscale')
+    parser.add_argument('--edit', action='store_true', help='Whether to visualize and edit the results')
+    parser.add_argument('--multiclass', action='store_true', help='Whether to use the multiclass model')
+    parser.add_argument('--prep', action='store_true', help='Whether to preprocess the folder of images')
+    parser.add_argument('--save', action='store_true', default=True, help='Whether to save the crops')
     args = parser.parse_args()
 
     IMG_DIR = args.data
@@ -88,7 +89,7 @@ def main():
         DEVICE = args.device
         GPU_COUNT = args.g
         IMAGES_PER_GPU = args.batch
-        DETECTION_MIN_CONFIDENCE = args.ci #Minimum probability value to accept a detected instance
+        DETECTION_MIN_CONFIDENCE = args.ci # Minimum probability value to accept a detected instance
         DETECTION_NMS_THRESHOLD = args.nms # Non-maximum suppression threshold for detection
 
     inference_config = InferenceConfig()
@@ -137,7 +138,6 @@ def main():
         macro_results = macro_model.detect([img_norm], verbose=0)
         macro_results = nms_suppression_multi(macro_results, args.nms)
         r = macro_results[0]
-        print(len(r['rois']))
         for i in range(len(r['rois'])):
             res_list.append([os.path.basename(image_path), 
                              len(res_list)+1, 

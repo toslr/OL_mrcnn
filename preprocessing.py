@@ -18,7 +18,8 @@ def czi_to_tiff(czi_folder,save_path):
                 image = np.squeeze(image)
                 image = np.moveaxis(image, 0, -1)
                 image[...,2] = 0
-                tiff.imwrite(os.path.join(save_path,file.replace('.czi','.tif')),image[...,:3])
+                new_image = np.stack((image[...,0],image[...,1],image[...,3]),axis=-1)
+                tiff.imwrite(os.path.join(save_path,file.replace('.czi','.tif')),new_image)
 
 def ometifs_to_tifs(dir_path, save_path):
     """converts ome-tifs to tifs"""
@@ -45,7 +46,8 @@ def normalize_images(folder_path, save_path_norm, GRAYSCALE, clip_limit=0.02):
                 norm_channels = []
                 for i in range(original_img.shape[2]):
                     if np.max(original_img[:,:,i]) > 0:
-                        norm_channel = skimage.exposure.equalize_adapthist(original_img[:,:,i], clip_limit=clip_limit)
+                        filt_channel = skimage.filters.median(original_img[:,:,i])
+                        norm_channel = skimage.exposure.equalize_adapthist(filt_channel, clip_limit=clip_limit)
                         norm_channel = (norm_channel * 255).astype(np.uint8)
                     else:
                         norm_channel = original_img[:,:,i]
