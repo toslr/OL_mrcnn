@@ -32,11 +32,12 @@ Downloads required:
 
 3. Open the ``config.txt`` file in the ``OL_segmentation`` folder and set:
 
-    - the first line to the path to the environmental python. You can use the following command to find it:
+    - the first line to the path to the environmental python. You can use the following command to find it and add ``/bin/python`` at the end of the path if not already there:
    
       .. code-block::
 
          conda info --envs
+   
    
     - the second line to the path to the ``OL_mrcnn-main`` folder
 
