@@ -46,49 +46,19 @@ Downloads required:
 Plugin User Guide
 =================
 
-Preprocessing 
-~~~~~~~~~~~~~~
+Launch the Fiji plugin. A window should pop.
 
-Before starting your analyses, your images need to be readable. Launch the "Preprocess images" options of the Fiji plugin. A window should pop.
-
-- Select the folder you want to preprocess.
-- Select the type of your images.
-- Select the channels you want to take into account. This choice will affect the accuracy of the results. Below is an example of which channels give the best results.
-
-.. figure:: /_static/wrong_channel_select.png
-   :height: 300px
-   :width: 360px
-   :alt: alternative text
-
-   Selecting only green and blue here will lead to bad results (regardless of contrast).
-
-.. figure:: /_static/right_channel_select.png
-   :height: 300px
-   :width: 360px
-   :alt: alternative text
-
-   Better to select red and blue / red and green and blue.
-
-- Select whether you want RGB or grayscale images. RGB is recommended for the analysis. 
-- Hit "Ok". Your new folder of images will appear next to the former one under the name "oldername_norm"
-
-
-Analysis
-~~~~~~~~~
-Select the "Run MRCNN" option of the Fiji plugin. A window should pop.
-
-- Select the task you want to achieve. **The segmentation part is still under development. Please refer to the Python userguide for segmenting.**
+- Select the task you want to achieve.
 - Choose the dataset you want to process.
+- Select the color channels.
 - Select the weight file you want to use. Click Other to choose your own.
 - Choose a name for the task. it will be the name of the results folder. 
 - Adjust the confidence and non-maximum suppression thresholds.
-- Choose whether you want to visualize and edit the results, 
-- Choose if you want to save the crops.
-- Hit "Ok".
+- Choose if you want to preprocess your images. The model can run only from tiff images, the preprocessing will convert the images to tiff.
+- Choose whether you want to visualize and edit the results, and if you want to save the crops.
+- Finish.
 
 If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click 'Finish' to save the changes.
-
-The final results of your job will be saved under the folder ``results/jobName``.
 
 
 Python User Guide

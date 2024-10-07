@@ -1,4 +1,4 @@
-name: tf_test
+name: OL_env
 channels:
   - defaults
   - conda-forge

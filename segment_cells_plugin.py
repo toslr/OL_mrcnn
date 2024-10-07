@@ -54,53 +54,35 @@ def main():
     parser.add_argument('--name', type=str, default='results0', help='Name of results directory')
     parser.add_argument('--data', type=str, default='data/test/imgs', help='Directory containing test images')
     parser.add_argument('--gray', action='store_true', help='Whether to convert images to grayscale')
-    parser.add_argument('--edit', action='store_true', help='Whether to visualize and edit the results')
     parser.add_argument('--multiclass', action='store_true', help='Whether to use the multiclass model')
-    parser.add_argument('--prep', action='store_true', help='Whether to preprocess the folder of images')
     parser.add_argument('--save', action='store_true', default=True, help='Whether to save the crops')
+
     args = parser.parse_args()
 
     IMG_DIR = args.data
     GRAYSCALE = args.gray
 
-    if args.prep:
-        for file in os.listdir(IMG_DIR):
-            if file.endswith('.ome.tif'):
-                ometifs_to_tifs(IMG_DIR,IMG_DIR+'_tiff')
-                normalize_images(IMG_DIR+'_tiff',IMG_DIR+'_norm', GRAYSCALE)
-                IMG_DIR = IMG_DIR+'_norm'
-                break
-            if file.endswith('.czi'):
-                czi_to_tiff(IMG_DIR,IMG_DIR+'_tiff')
-                normalize_images(IMG_DIR+'_tiff',IMG_DIR+'_norm', GRAYSCALE)
-                IMG_DIR = IMG_DIR+'_norm'
-                break
-            if file.endswith('.tiff'):
-                normalize_images(IMG_DIR,IMG_DIR+'_norm', GRAYSCALE)
-                IMG_DIR = IMG_DIR+'_norm'
-                break
-    
     if args.multiclass:
         from custom_multi import CustomConfig, CustomDataset
     else:
         from custom import CustomConfig, CustomDataset
-
+    
     class InferenceConfig(CustomConfig):
-        DEVICE = args.device
         GPU_COUNT = args.g
         IMAGES_PER_GPU = args.batch
-        DETECTION_MIN_CONFIDENCE = args.ci # Minimum probability value to accept a detected instance
-        DETECTION_NMS_THRESHOLD = args.nms # Non-maximum suppression threshold for detection
-
+        DETECTION_MIN_CONFIDENCE = args.ci
+        DETECTION_NMS_THRESHOLD = args.nms
+        NAME = args.name
+        DEVICE = args.device
+        NUM_CLASSES = 1 + 1
+    
     inference_config = InferenceConfig()
-    macro_model = modellib.MaskRCNN(mode="inference",
-                                config=inference_config,
-                                model_dir=DEFAULT_LOGS_DIR)
-
-    macro_model_path = os.path.join(DEFAULT_LOGS_DIR, args.weights)
-
-    print("Loading macro weights from ", macro_model_path)
-    tf.keras.Model.load_weights(macro_model.keras_model, macro_model_path , by_name=True, skip_mismatch=True)
+    micro_model = modellib.MaskRCNN(mode="inference", 
+                                    config=inference_config, 
+                                    model_dir=DEFAULT_LOGS_DIR)
+    micro_model_path = os.path.join(DEFAULT_LOGS_DIR, args.weights)
+    print("Loading micro weights from ", micro_model_path)
+    tf.keras.Model.load_weights(micro_model.keras_model, micro_model_path , by_name=True, skip_mismatch=True)
     RESULTS_NAME = args.name
     RESULTS_DIR = os.path.join(ROOT_DIR, "results", RESULTS_NAME)
     os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -120,37 +102,20 @@ def main():
         print(image_path)
         original_img = skimage.io.imread(image_path)
         img_norm = original_img
-        '''
-        # PREPROCESSING STEP TO GET IMAGES IN THE EXPECTED FORMAT
-        if GRAYSCALE:
-            float_gray_img = skimage.io.imread(image_path, as_gray=True)
-            float_gray_img_norm = skimage.exposure.equalize_adapthist(float_gray_img, clip_limit=0.02)
-            img_norm = np.stack(((float_gray_img_norm * 255).astype(np.uint8),)*3, axis=-1)
-        else:
-            norm_channels = []
-            for i in range(original_img.shape[2]):
-                if np.max(original_img[:,:,i]) > 0:
-                    norm_channel = skimage.exposure.equalize_adapthist(original_img[:,:,i], clip_limit=0.02)
-                    norm_channel = (norm_channel * 255).astype(np.uint8)
-                else:
-                    norm_channel = original_img[:,:,i]
-                norm_channels.append(norm_channel)
-            img_norm = np.stack(norm_channels, axis=-1)'''
 
-        macro_results = macro_model.detect([img_norm], verbose=0)
-        macro_results = nms_suppression_multi(macro_results, args.nms)
-        r = macro_results[0]
+        micro_results = micro_model.detect([img_norm], verbose=0)
+        micro_results = nms_suppression_multi(micro_results, args.nms)
+        r = micro_results[0]
         for i in range(len(r['rois'])):
             res_list.append([os.path.basename(image_path), 
                              len(res_list)+1, 
                              dataset_val.class_names[r['class_ids'][i]], 
                              r['scores'][i],
                              r['rois'][i]])
-
-    res_df = pd.DataFrame(res_list, columns=['image_name', 'detection_id', 'class', 'score', 'bbox'])
+            res_df = pd.DataFrame(res_list, columns=['image_name', 'detection_id', 'class', 'score', 'bbox'])
     res_df.to_csv(os.path.join(RESULTS_DIR, 'results.csv'), index=False)
     crop_from_csv(os.path.join(RESULTS_DIR, 'results.csv'), IMG_DIR, RESULTS_DIR)
 
-
 if __name__ == '__main__':
     main()
+

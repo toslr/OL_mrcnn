@@ -47,16 +47,15 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">Introduction</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#plugin-user-guide">Plugin User Guide</a></li>
+<li><a class="reference internal" href="#plugin-user-guide">Plugin User Guide</a><ul>
+<li><a class="reference internal" href="#preprocessing">Preprocessing</a></li>
+<li><a class="reference internal" href="#analysis">Analysis</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#python-user-guide">Python User Guide</a><ul>
-<li><a class="reference internal" href="#image-cropping">Image cropping</a></li>
-<li><a class="reference internal" href="#full-pipeline">Full pipeline</a></li>
-<li><a class="reference internal" href="#retraining-your-own-model">Retraining your own model</a><ul>
 <li><a class="reference internal" href="#data-structure">Data structure</a></li>
 <li><a class="reference internal" href="#retraining-a-single-class-model">Retraining a single class model</a></li>
 <li><a class="reference internal" href="#retraining-a-multi-class-model">Retraining a multi-class model</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -123,24 +122,50 @@
 </section>
 <section id="plugin-user-guide">
 <h1>Plugin User Guide<a class="headerlink" href="#plugin-user-guide" title="Link to this heading"></a></h1>
-<p>Launch the Fiji plugin. A window should pop.</p>
+<section id="preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Link to this heading"></a></h2>
+<p>Before starting your analyses, your images need to be readable. Launch the “Preprocess images” options of the Fiji plugin. A window should pop.</p>
 <ul class="simple">
-<li><p>Select the task you want to achieve.</p></li>
+<li><p>Select the folder you want to preprocess.</p></li>
+<li><p>Select the type of your images.</p></li>
+<li><p>Select the channels you want to take into account. This choice will affect the accuracy of the results. Below is an example of which channels give the best results.</p></li>
+</ul>
+<figure class="align-default" id="id9">
+<a class="reference internal image-reference" href="_images/wrong_channel_select.png"><img alt="alternative text" src="_images/wrong_channel_select.png" style="width: 360px; height: 300px;" /></a>
+<figcaption>
+<p><span class="caption-text">Selecting only green and blue here will lead to bad results (regardless of contrast).</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id10">
+<a class="reference internal image-reference" href="_images/right_channel_select.png"><img alt="alternative text" src="_images/right_channel_select.png" style="width: 360px; height: 300px;" /></a>
+<figcaption>
+<p><span class="caption-text">Better to select red and blue / red and green and blue.</span><a class="headerlink" href="#id10" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>Select whether you want RGB or grayscale images. RGB is recommended for the analysis.</p></li>
+<li><p>Hit “Ok”. Your new folder of images will appear next to the former one under the name “oldername_norm”</p></li>
+</ul>
+</section>
+<section id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h2>
+<p>Select the “Run MRCNN” option of the Fiji plugin. A window should pop.</p>
+<ul class="simple">
+<li><p>Select the task you want to achieve. <strong>The segmentation part is still under development. Please refer to the Python userguide for segmenting.</strong></p></li>
 <li><p>Choose the dataset you want to process.</p></li>
-<li><p>Select the color channels.</p></li>
 <li><p>Select the weight file you want to use. Click Other to choose your own.</p></li>
 <li><p>Choose a name for the task. it will be the name of the results folder.</p></li>
 <li><p>Adjust the confidence and non-maximum suppression thresholds.</p></li>
-<li><p>Choose if you want to preprocess your images. The model can run only from tiff images, the preprocessing will convert the images to tiff.</p></li>
-<li><p>Choose whether you want to visualize and edit the results, and if you want to save the crops.</p></li>
-<li><p>Finish.</p></li>
+<li><p>Choose whether you want to visualize and edit the results,</p></li>
+<li><p>Choose if you want to save the crops.</p></li>
+<li><p>Hit “Ok”.</p></li>
 </ul>
 <p>If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click ‘Finish’ to save the changes.</p>
+<p>The final results of your job will be saved under the folder <code class="docutils literal notranslate"><span class="pre">results/jobName</span></code>.</p>
+</section>
 </section>
 <section id="python-user-guide">
 <h1>Python User Guide<a class="headerlink" href="#python-user-guide" title="Link to this heading"></a></h1>
-<section id="image-cropping">
-<h2>Image cropping<a class="headerlink" href="#image-cropping" title="Link to this heading"></a></h2>
 <ul>
 <li><p>Add your dataset in the folder <code class="docutils literal notranslate"><span class="pre">/data</span></code></p></li>
 <li><p>OPTIONAL: preprocess your data with the <code class="docutils literal notranslate"><span class="pre">preprocessing.ipynb</span></code> notebook</p></li>
@@ -161,9 +186,6 @@
 </li>
 <li><p>Run the notebook. The results will be saved in the folder <code class="docutils literal notranslate"><span class="pre">/results/results_name</span></code>.</p></li>
 </ul>
-</section>
-<section id="full-pipeline">
-<h2>Full pipeline<a class="headerlink" href="#full-pipeline" title="Link to this heading"></a></h2>
 <ul>
 <li><p>In this setup, we run a first model to crop and classify objects in the images. Then we run a second model on the cropped images to get a refined mask.</p></li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">model_pipeline.ipynb</span></code> notebook, configure the following parameters:</p>
@@ -189,11 +211,8 @@
 </li>
 <li><p>Run the notebook. The results will be saved in the folder <code class="docutils literal notranslate"><span class="pre">/results/RESULTS_NAME</span></code>.</p></li>
 </ul>
-</section>
-<section id="retraining-your-own-model">
-<h2>Retraining your own model<a class="headerlink" href="#retraining-your-own-model" title="Link to this heading"></a></h2>
 <section id="data-structure">
-<h3>Data structure<a class="headerlink" href="#data-structure" title="Link to this heading"></a></h3>
+<h2>Data structure<a class="headerlink" href="#data-structure" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">/data</span></code> folder in the root directory.</p></li>
 <li><p>Inside the <code class="docutils literal notranslate"><span class="pre">/data</span></code> directory, put your images in a folder named <code class="docutils literal notranslate"><span class="pre">/imgs</span></code> and your binary masks in a folder named <code class="docutils literal notranslate"><span class="pre">/masks</span></code>. The name, size and format of the masks must match the images.</p></li>
@@ -211,7 +230,7 @@
 </div>
 </section>
 <section id="retraining-a-single-class-model">
-<h3>Retraining a single class model<a class="headerlink" href="#retraining-a-single-class-model" title="Link to this heading"></a></h3>
+<h2>Retraining a single class model<a class="headerlink" href="#retraining-a-single-class-model" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><dl class="simple">
 <dt>In the <code class="docutils literal notranslate"><span class="pre">custom.py</span></code> script, configure the following:</dt><dd><ul>
@@ -241,7 +260,7 @@
 </div>
 </section>
 <section id="retraining-a-multi-class-model">
-<h3>Retraining a multi-class model<a class="headerlink" href="#retraining-a-multi-class-model" title="Link to this heading"></a></h3>
+<h2>Retraining a multi-class model<a class="headerlink" href="#retraining-a-multi-class-model" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Same instructions as before but on the <code class="docutils literal notranslate"><span class="pre">custom_multi.py</span></code> script.</p></li>
 <li><p>Run the script in a terminal:</p></li>
@@ -249,7 +268,6 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">custom_multi</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 <section id="indices-and-tables">
