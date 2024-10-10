@@ -92,4 +92,4 @@ if __name__ == '__main__':
     parser.add_argument('--img_dir', type=str, help='Path to the directory containing the images')
     parser.add_argument('--res_dir', type=str, help='Path to the directory where the cropped images will be saved')
     args = parser.parse_args()
-    crop_from_csv(args.csv, args.img_dir, args.res_dir)
+    crop_from_csv(args.csv, args.img_dir[:-5], args.res_dir)

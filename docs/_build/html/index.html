@@ -98,14 +98,14 @@
 <li><p>plugin and weight files <a class="reference external" href="https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing">here</a></p></li>
 </ul>
 <ol class="arabic simple">
-<li><p>From a terminal, place yourself in the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> model folder. Create a conda environment using the .yml file:</p></li>
+<li><p>From a terminal, place yourself in the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> model folder (example: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">Downloads/OL_mrcnn-main</span></code>). Create a conda environment using the .yml file:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
 </pre></div>
 </div>
 <ol class="arabic" start="2">
-<li><p>Place the model weights in the folder <code class="docutils literal notranslate"><span class="pre">/logs</span></code>. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.</p></li>
-<li><p>Open the <code class="docutils literal notranslate"><span class="pre">config.txt</span></code> file in the <code class="docutils literal notranslate"><span class="pre">OL_segmentation</span></code> folder and set:</p>
+<li><p>Place the model weights in the folder <code class="docutils literal notranslate"><span class="pre">/logs</span></code> of <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code>. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.</p></li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">config.txt</span></code> file in the <code class="docutils literal notranslate"><span class="pre">OL_segmentation</span></code> plugin folder and set:</p>
 <blockquote>
 <div><ul>
 <li><p>the first line to the path to the environmental python. You can use the following command to find it and add <code class="docutils literal notranslate"><span class="pre">/bin/python</span></code> at the end of the path if not already there:</p>
@@ -113,7 +113,7 @@
 </pre></div>
 </div>
 </li>
-<li><p>the second line to the path to the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> folder</p></li>
+<li><p>the second line to the path to the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> folder (on Mac, right or two-finger click on the folder, press option and click ‘Copy […] as pathname’)</p></li>
 </ul>
 </div></blockquote>
 </li>

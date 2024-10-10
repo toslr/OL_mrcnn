@@ -22,15 +22,15 @@ Downloads required:
 .. _here: https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing
 
 
-1. From a terminal, place yourself in the ``OL_mrcnn-main`` model folder. Create a conda environment using the .yml file:
+1. From a terminal, place yourself in the ``OL_mrcnn-main`` model folder (example: ``cd Downloads/OL_mrcnn-main``). Create a conda environment using the .yml file:
 
 .. code-block::
 
    conda env create -f environment.yml
 
-2. Place the model weights in the folder ``/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
+2. Place the model weights in the folder ``/logs`` of ``OL_mrcnn-main``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
 
-3. Open the ``config.txt`` file in the ``OL_segmentation`` folder and set:
+3. Open the ``config.txt`` file in the ``OL_segmentation`` plugin folder and set:
 
     - the first line to the path to the environmental python. You can use the following command to find it and add ``/bin/python`` at the end of the path if not already there:
    
@@ -39,7 +39,7 @@ Downloads required:
          conda info --envs
    
    
-    - the second line to the path to the ``OL_mrcnn-main`` folder
+    - the second line to the path to the ``OL_mrcnn-main`` folder (on Mac, right or two-finger click on the folder, press option and click 'Copy [...] as pathname')
 
 4. Move the ``OL_segmentation`` plugin folder inside the Fiji plugins. Restart Fiji to take into account the changes.
 
