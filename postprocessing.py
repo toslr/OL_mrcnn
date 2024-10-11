@@ -3,6 +3,8 @@ import os
 import cv2
 import pandas as pd
 import argparse
+import skimage
+from aicsimageio import AICSImage
 
 def detect_overlap(bboxes):
     """List overlaps between the bounding boxes."""
@@ -36,6 +38,7 @@ def nms_suppression_multi(results,threshold):
 
 def crop_from_csv(csv_results,img_dir,res_dir):
     """Crop ROIs in images from csv results"""
+    print(img_dir)
     results = pd.read_csv(csv_results)
     results['detection_id'] = [i+1 for i in range(len(results))]
     results.to_csv(csv_results,index=False)
@@ -48,9 +51,15 @@ def crop_from_csv(csv_results,img_dir,res_dir):
         classes = results[results['image_name']==image_name]['class'].values
         str_rois = results[results['image_name']==image_name]['bbox'].values
         rois =[[int(coord) for coord in str_roi.strip('[]').split()] for str_roi in str_rois]
-        image = cv2.imread(os.path.join(img_dir,image_name))
+        if image_name.endswith('.czi'):
+            czi = AICSImage(os.path.join(img_dir,image_name))
+            image = czi.get_image_data("CZYX", S=0, T=0, Z=0)
+            image = np.squeeze(image)
+            image = np.moveaxis(image, 0, -1)
+        else:
+            image = skimage.io.imread(os.path.join(img_dir,image_name))
         for i in range(len(detection_ids)):
-            cv2.imwrite(os.path.join(res_dir,f'{detection_ids[i]:04d}_'+classes[i]+'.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
+            skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-3] + f'{i:04d}_' + classes[i] + '.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
 
 
 def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,modify_results=False,save_images=False):
