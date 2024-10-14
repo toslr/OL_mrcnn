@@ -52,14 +52,19 @@ def crop_from_csv(csv_results,img_dir,res_dir):
         str_rois = results[results['image_name']==image_name]['bbox'].values
         rois =[[int(coord) for coord in str_roi.strip('[]').split()] for str_roi in str_rois]
         if image_name.endswith('.czi'):
+            cziCheck = True
             czi = AICSImage(os.path.join(img_dir,image_name))
             image = czi.get_image_data("CZYX", S=0, T=0, Z=0)
             image = np.squeeze(image)
             image = np.moveaxis(image, 0, -1)
         else:
             image = skimage.io.imread(os.path.join(img_dir,image_name))
-        for i in range(len(detection_ids)):
-            skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-3] + f'{i:04d}_' + classes[i] + '.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
+        if cziCheck:
+            for i in range(len(detection_ids)):
+                skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-4] + f'_{i:04d}_' + classes[i] + '.czi'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
+        else:
+            for i in range(len(detection_ids)):
+                skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-4] + f'_{i:04d}_' + classes[i] + '.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
 
 
 def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,modify_results=False,save_images=False):
