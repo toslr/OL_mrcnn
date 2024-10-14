@@ -47,6 +47,7 @@ def crop_from_csv(csv_results,img_dir,res_dir):
         if file.endswith('.tif'):
             os.remove(os.path.join(res_dir,file))
     for image_name in image_names:
+        cziCheck = False
         detection_ids = results[results['image_name']==image_name]['detection_id'].values
         classes = results[results['image_name']==image_name]['class'].values
         str_rois = results[results['image_name']==image_name]['bbox'].values
