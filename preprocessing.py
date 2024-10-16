@@ -82,10 +82,10 @@ if __name__ == '__main__':
     data_path = args.data
     channels = [int(ch)-1 for ch in args.channels.strip("[]").split(",")[:-1]]
 
-    if args.type == 'czi':
+    if args.type == '.czi':
         output_path = data_path + '_tiff'
         czi_to_tiff(data_path, output_path,channels)
-    elif args.type == 'ometif':
+    elif args.type == '.ome.tif':
         output_path = data_path + '_tiff'
         ometifs_to_tifs(data_path, output_path,channels)
     else:
