@@ -1,10 +1,14 @@
 import numpy as np
 import os
+import shutil
 import cv2
 import pandas as pd
 import argparse
 import skimage
 from aicsimageio import AICSImage
+import warnings
+
+warnings.filterwarnings("ignore", message=".*low contrast image.*")
 
 def detect_overlap(bboxes):
     """List overlaps between the bounding boxes."""
@@ -38,7 +42,9 @@ def nms_suppression_multi(results,threshold):
 
 def crop_from_csv(csv_results,img_dir,res_dir):
     """Crop ROIs in images from csv results"""
-    print(img_dir)
+    if os.path.exists(res_dir):
+        shutil.rmtree(res_dir)
+    os.makedirs(res_dir)
     results = pd.read_csv(csv_results)
     results['detection_id'] = [i+1 for i in range(len(results))]
     results.to_csv(csv_results,index=False)

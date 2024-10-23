@@ -4,6 +4,7 @@ import tifffile as tiff
 import skimage
 from aicsimageio import AICSImage
 import argparse
+import shutil
 
 
 def czi_to_tiff(czi_folder,save_path,channels=None):
@@ -94,3 +95,4 @@ if __name__ == '__main__':
         
     
     normalize_images(output_path, data_path+'_norm', args.gray, args.clip)
+    shutil.rmtree(data_path+'_tiff')

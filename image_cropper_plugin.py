@@ -26,6 +26,9 @@ import matplotlib.patches as patches
 import matplotlib.image as mpimg
 import tifffile as tiff
 import argparse
+import logging
+logging.getLogger('tensorflow').addFilter(lambda record: "map_fn_v2" not in record.getMessage())
+logging.getLogger('tensorflow').addFilter(lambda record: "op: \"CropAndResize\"" not in record.getMessage())
 
 from mrcnn import utils
 from mrcnn import visualize
@@ -39,7 +42,6 @@ from preprocessing import czi_to_tiff, ometifs_to_tifs, normalize_images
 from postprocessing import nms_suppression_multi, crop_from_csv, crop_from_results
 
 def main():
-    print("Command line arguments:", ' '.join(sys.argv))
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) #os.getcwd()
     sys.path.append(ROOT_DIR)  # To find local version of the library
     DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
@@ -101,8 +103,12 @@ def main():
 
     print("Loading macro weights from ", macro_model_path)
     tf.keras.Model.load_weights(macro_model.keras_model, macro_model_path , by_name=True, skip_mismatch=True)
-    RESULTS_NAME = args.name
-    RESULTS_DIR = os.path.join(ROOT_DIR, "results", RESULTS_NAME)
+    if IMG_DIR.endswith('/'):
+        IMG_DIR = IMG_DIR[:-1]
+    if not IMG_DIR.endswith('_norm'):
+        print('Selecting normalized images')
+        IMG_DIR = IMG_DIR+'_norm'
+    RESULTS_DIR = os.path.join(os.path.dirname(IMG_DIR), args.name)
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     # Validation dataset
@@ -149,7 +155,7 @@ def main():
 
     res_df = pd.DataFrame(res_list, columns=['image_name', 'detection_id', 'class', 'score', 'bbox'])
     res_df.to_csv(os.path.join(RESULTS_DIR, 'results.csv'), index=False)
-    crop_from_csv(os.path.join(RESULTS_DIR, 'results.csv'), IMG_DIR, RESULTS_DIR)
+    crop_from_csv(os.path.join(RESULTS_DIR, 'results.csv'), IMG_DIR, os.path.join(RESULTS_DIR, 'crops'))
 
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@ name: OL_env
 channels:
   - defaults
   - conda-forge
-  #bioformats_jar
 dependencies:
   - python=3.9.19
   - pip:
@@ -19,4 +18,3 @@ dependencies:
       - argparse==1.4.0
       - aicsimageio==4.14.0
       - aicspylibczi==3.1.1
-      #- python-bioformats==4.0.7

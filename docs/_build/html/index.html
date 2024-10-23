@@ -95,6 +95,11 @@
 <p>Downloads required:</p>
 <ul class="simple">
 <li><p>model: <a class="reference external" href="https://github.com/toslr/OL_mrcnn">https://github.com/toslr/OL_mrcnn</a></p></li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/github.png"><img alt="alternative text" src="_images/github.png" style="width: 360px; height: 300px;" /></a>
+</figure>
+<ul class="simple">
 <li><p>plugin and weight files <a class="reference external" href="https://drive.google.com/drive/folders/1PIstT451WQIOS59vtHqkq8PTD-xO0Gj_?usp=sharing">here</a></p></li>
 </ul>
 <ol class="arabic simple">
@@ -104,20 +109,20 @@
 </pre></div>
 </div>
 <ol class="arabic" start="2">
-<li><p>Place the model weights in the folder <code class="docutils literal notranslate"><span class="pre">/logs</span></code> of <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code>. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.</p></li>
+<li><p>Place the model weights in the folder <code class="docutils literal notranslate"><span class="pre">/logs</span></code> of <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main/logs</span></code>. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.</p></li>
 <li><p>Open the <code class="docutils literal notranslate"><span class="pre">config.txt</span></code> file in the <code class="docutils literal notranslate"><span class="pre">OL_segmentation</span></code> plugin folder and set:</p>
 <blockquote>
 <div><ul>
-<li><p>the first line to the path to the environmental python. You can use the following command to find it and add <code class="docutils literal notranslate"><span class="pre">/bin/python</span></code> at the end of the path if not already there:</p>
+<li><p>the first line to the path to the environmental python. You can use the following command to find it and add <code class="docutils literal notranslate"><span class="pre">/bin/python</span></code> for MacOS/Linux or <code class="docutils literal notranslate"><span class="pre">\python</span></code> for Windows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">info</span> <span class="o">--</span><span class="n">envs</span>
 </pre></div>
 </div>
 </li>
-<li><p>the second line to the path to the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> folder (on Mac, right or two-finger click on the folder, press option and click ‘Copy […] as pathname’)</p></li>
+<li><p>the second line to the path to the <code class="docutils literal notranslate"><span class="pre">OL_mrcnn-main</span></code> folder (on MacOS, right or two-finger click on the folder, press option and click ‘Copy […] as pathname’)</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>Move the <code class="docutils literal notranslate"><span class="pre">OL_segmentation</span></code> plugin folder inside the Fiji plugins. Restart Fiji to take into account the changes.</p></li>
+<li><p>Move the <code class="docutils literal notranslate"><span class="pre">OL_segmentation</span></code> plugin folder inside the Fiji plugins. <strong>Restart Fiji</strong> to take into account the changes.</p></li>
 </ol>
 </section>
 <section id="plugin-user-guide">
@@ -144,7 +149,7 @@
 </figure>
 <ul class="simple">
 <li><p>Select whether you want RGB or grayscale images. RGB is recommended for the analysis.</p></li>
-<li><p>Hit “Ok”. Your new folder of images will appear next to the former one under the name “oldername_norm”</p></li>
+<li><p>Hit “Ok”. A new folder of images will appear in your directory: <code class="docutils literal notranslate"><span class="pre">foldername_norm</span></code>. This contains the normalized images.</p></li>
 </ul>
 </section>
 <section id="analysis">
@@ -152,16 +157,17 @@
 <p>Select the “Run MRCNN” option of the Fiji plugin. A window should pop.</p>
 <ul class="simple">
 <li><p>Select the task you want to achieve. <strong>The segmentation part is still under development. Please refer to the Python userguide for segmenting.</strong></p></li>
-<li><p>Choose the dataset you want to process.</p></li>
+<li><p>Choose the dataset you want to process. Make sure to select the <code class="docutils literal notranslate"><span class="pre">foldername_norm</span></code> folder.</p></li>
 <li><p>Select the weight file you want to use. Click Other to choose your own.</p></li>
-<li><p>Choose a name for the task. it will be the name of the results folder.</p></li>
-<li><p>Adjust the confidence and non-maximum suppression thresholds.</p></li>
-<li><p>Choose whether you want to visualize and edit the results,</p></li>
+<li><p>(Optional) Adjust the confidence and non-maximum suppression thresholds. See next section for details.</p></li>
+<li><p>Choose a name for the task. It will be the name of the folder where the results will be saved in your directory.</p></li>
+<li><p>Choose the file format <strong>from your original dataset</strong>.</p></li>
+<li><p>Choose whether you want to visualize and edit the results.</p></li>
 <li><p>Choose if you want to save the crops.</p></li>
 <li><p>Hit “Ok”.</p></li>
 </ul>
 <p>If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click ‘Finish’ to save the changes.</p>
-<p>The final results of your job will be saved under the folder <code class="docutils literal notranslate"><span class="pre">results/jobName</span></code>.</p>
+<p>The final results of your job will be saved next to your dataset folder, under the job name you provided.</p>
 </section>
 </section>
 <section id="python-user-guide">

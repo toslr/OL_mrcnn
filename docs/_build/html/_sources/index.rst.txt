@@ -16,6 +16,11 @@ Prerequisites: Python 3.9, Miniconda 3, Fiji
 Downloads required: 
 
 - model: https://github.com/toslr/OL_mrcnn
+.. figure:: /_static/github.png
+   :height: 300px
+   :width: 360px
+   :alt: alternative text
+
 
 - plugin and weight files here_
 
@@ -28,20 +33,20 @@ Downloads required:
 
    conda env create -f environment.yml
 
-2. Place the model weights in the folder ``/logs`` of ``OL_mrcnn-main``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
+2. Place the model weights in the folder ``/logs`` of ``OL_mrcnn-main/logs``. These contain the original weights (trained on COCO dataset) and the weights trained on a custom dataset. Feel free to add your own weight files.
 
 3. Open the ``config.txt`` file in the ``OL_segmentation`` plugin folder and set:
 
-    - the first line to the path to the environmental python. You can use the following command to find it and add ``/bin/python`` at the end of the path if not already there:
+    - the first line to the path to the environmental python. You can use the following command to find it and add ``/bin/python`` for MacOS/Linux or ``\python`` for Windows:
    
       .. code-block::
 
          conda info --envs
    
    
-    - the second line to the path to the ``OL_mrcnn-main`` folder (on Mac, right or two-finger click on the folder, press option and click 'Copy [...] as pathname')
+    - the second line to the path to the ``OL_mrcnn-main`` folder (on MacOS, right or two-finger click on the folder, press option and click 'Copy [...] as pathname')
 
-4. Move the ``OL_segmentation`` plugin folder inside the Fiji plugins. Restart Fiji to take into account the changes.
+4. Move the ``OL_segmentation`` plugin folder inside the Fiji plugins. **Restart Fiji** to take into account the changes.
 
 
 Plugin User Guide
@@ -71,7 +76,7 @@ Before starting your analyses, your images need to be readable. Launch the "Prep
    Better to select red and blue / red and green and blue.
 
 - Select whether you want RGB or grayscale images. RGB is recommended for the analysis. 
-- Hit "Ok". Your new folder of images will appear next to the former one under the name "oldername_norm"
+- Hit "Ok". A new folder of images will appear in your directory: ``foldername_norm``. This contains the normalized images.
 
 
 Analysis
@@ -79,17 +84,18 @@ Analysis
 Select the "Run MRCNN" option of the Fiji plugin. A window should pop.
 
 - Select the task you want to achieve. **The segmentation part is still under development. Please refer to the Python userguide for segmenting.**
-- Choose the dataset you want to process.
+- Choose the dataset you want to process. Make sure to select the ``foldername_norm`` folder.
 - Select the weight file you want to use. Click Other to choose your own.
-- Choose a name for the task. it will be the name of the results folder. 
-- Adjust the confidence and non-maximum suppression thresholds.
-- Choose whether you want to visualize and edit the results, 
+- (Optional) Adjust the confidence and non-maximum suppression thresholds. See next section for details.
+- Choose a name for the task. It will be the name of the folder where the results will be saved in your directory. 
+- Choose the file format **from your original dataset**.
+- Choose whether you want to visualize and edit the results.
 - Choose if you want to save the crops.
 - Hit "Ok".
 
 If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click 'Finish' to save the changes.
 
-The final results of your job will be saved under the folder ``results/jobName``.
+The final results of your job will be saved next to your dataset folder, under the job name you provided.
 
 
 Python User Guide
