@@ -8,6 +8,7 @@ DEVICE = "/cpu:0"  # /cpu:0 or /gpu:0
 import warnings
 warnings.filterwarnings('ignore')
 import os
+import shutil
 import sys
 import json
 import datetime
@@ -38,8 +39,7 @@ import mrcnn.model as modellib
 from mrcnn.model import log
 from mrcnn.config import Config
 from mrcnn import model as modellib, utils
-from preprocessing import czi_to_tiff, ometifs_to_tifs, normalize_images
-from postprocessing import nms_suppression_multi, crop_from_csv, crop_from_results
+from postprocessing import apply_mask_to_imgs
 
 def main():
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) #os.getcwd()
@@ -53,35 +53,18 @@ def main():
     parser.add_argument('--ci', type=float, default=0.7, help='Minimum confidence level for detection')
     parser.add_argument('--nms', type=float, default=0.3, help='NMS threshold for detection')
     parser.add_argument('--weights', type=str, default='mask_rcnn_coco.h5', help='Subpath to weights file')
-    parser.add_argument('--name', type=str, default='results0', help='Name of results directory')
     parser.add_argument('--data', type=str, default='data/test/imgs', help='Directory containing test images')
     parser.add_argument('--gray', action='store_true', help='Whether to convert images to grayscale')
-    parser.add_argument('--edit', action='store_true', help='Whether to visualize and edit the results')
     parser.add_argument('--multiclass', action='store_true', help='Whether to use the multiclass model')
-    parser.add_argument('--prep', action='store_true', help='Whether to preprocess the folder of images')
-    parser.add_argument('--save', action='store_true', default=True, help='Whether to save the crops')
     args = parser.parse_args()
 
-    IMG_DIR = args.data
+    IMG_DIR_CROP = os.path.join(args.data, 'crops')
+    IMG_DIR_NORM = os.path.join(args.data, 'crops_norm')
+    MASK_DIR = os.path.join(args.data, 'masks')
+    os.makedirs(MASK_DIR, exist_ok=True)
+
     GRAYSCALE = args.gray
 
-    if args.prep:
-        for file in os.listdir(IMG_DIR):
-            if file.endswith('.ome.tif'):
-                ometifs_to_tifs(IMG_DIR,IMG_DIR+'_tiff')
-                normalize_images(IMG_DIR+'_tiff',IMG_DIR+'_norm', GRAYSCALE)
-                IMG_DIR = IMG_DIR+'_norm'
-                break
-            if file.endswith('.czi'):
-                czi_to_tiff(IMG_DIR,IMG_DIR+'_tiff')
-                normalize_images(IMG_DIR+'_tiff',IMG_DIR+'_norm', GRAYSCALE)
-                IMG_DIR = IMG_DIR+'_norm'
-                break
-            if file.endswith('.tiff'):
-                normalize_images(IMG_DIR,IMG_DIR+'_norm', GRAYSCALE)
-                IMG_DIR = IMG_DIR+'_norm'
-                break
-    
     if args.multiclass:
         from custom_multi import CustomConfig, CustomDataset
     else:
@@ -93,52 +76,47 @@ def main():
         IMAGES_PER_GPU = args.batch
         DETECTION_MIN_CONFIDENCE = args.ci # Minimum probability value to accept a detected instance
         DETECTION_NMS_THRESHOLD = args.nms # Non-maximum suppression threshold for detection
+        MAX_GT_INSTANCES = 1
+        DETECTION_MAX_INSTANCES = 1
 
     inference_config = InferenceConfig()
-    macro_model = modellib.MaskRCNN(mode="inference",
-                                config=inference_config,
-                                model_dir=DEFAULT_LOGS_DIR)
+    micro_model = modellib.MaskRCNN(mode="inference",
+                            config=inference_config,
+                            model_dir=DEFAULT_LOGS_DIR)
 
-    macro_model_path = os.path.join(DEFAULT_LOGS_DIR, args.weights)
+    micro_model_path = os.path.join(DEFAULT_LOGS_DIR, args.weights)
 
-    print("Loading macro weights from ", macro_model_path)
-    tf.keras.Model.load_weights(macro_model.keras_model, macro_model_path , by_name=True, skip_mismatch=True)
-    if IMG_DIR.endswith('/'):
-        IMG_DIR = IMG_DIR[:-1]
-    if not IMG_DIR.endswith('_norm'):
-        print('Selecting normalized images')
-        IMG_DIR = IMG_DIR+'_norm'
-    RESULTS_DIR = os.path.join(os.path.dirname(IMG_DIR), args.name)
-    os.makedirs(RESULTS_DIR, exist_ok=True)
+    print("Loading single-cell weights from ", micro_model_path)
+    tf.keras.Model.load_weights(micro_model.keras_model, micro_model_path , by_name=True, skip_mismatch=True)
 
     # Validation dataset
     dataset_val = CustomDataset()
     dataset_val.load_custom(os.path.join(ROOT_DIR,"data"), "valid")
     dataset_val.prepare()
 
-    image_paths = []
-    for filename in sorted(os.listdir(IMG_DIR)):
+    image_norm_paths = []
+    for filename in sorted(os.listdir(IMG_DIR_NORM)):
         if filename.endswith(".tif"):
-            image_paths.append(os.path.join(IMG_DIR, filename))
+            image_norm_paths.append(os.path.join(IMG_DIR_NORM, filename))
 
-    res_list = []
-    for image_path in image_paths:
-        print(image_path)
+    for image_path in image_norm_paths:
         img_norm = skimage.io.imread(image_path)
+        micro_results = micro_model.detect([img_norm], verbose=0)
+        r = micro_results[0]
+        mask = (r['masks'][:,:,0] * 255).astype(np.uint8)
+        cv2.imwrite(os.path.join(MASK_DIR, os.path.basename(image_path)), mask)
 
-        macro_results = macro_model.detect([img_norm], verbose=0)
-        macro_results = nms_suppression_multi(macro_results, args.nms)
-        r = macro_results[0]
-        for i in range(len(r['rois'])):
-            res_list.append([os.path.basename(image_path), 
-                             len(res_list)+1, 
-                             dataset_val.class_names[r['class_ids'][i]], 
-                             r['scores'][i],
-                             r['rois'][i]])
+    
+    shutil.rmtree(IMG_DIR_NORM)
+    apply_mask_to_imgs(IMG_DIR_CROP, MASK_DIR)
 
-    res_df = pd.DataFrame(res_list, columns=['image_name', 'detection_id', 'class', 'score', 'bbox'])
-    res_df.to_csv(os.path.join(RESULTS_DIR, 'results.csv'), index=False)
-    crop_from_csv(os.path.join(RESULTS_DIR, 'results.csv'), IMG_DIR, os.path.join(RESULTS_DIR, 'crops'))
+        ## save mask and check for overlap
+
+        ## save individual masks for whole image
+        ## reconstruct whole mask
+        ## check for bbox overlap. 
+        ## correct mask
+    
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ import pandas as pd
 import argparse
 import skimage
 from aicsimageio import AICSImage
+import tifffile as tiff
 import warnings
 
 warnings.filterwarnings("ignore", message=".*low contrast image.*")
@@ -49,29 +50,47 @@ def crop_from_csv(csv_results,img_dir,res_dir):
     results['detection_id'] = [i+1 for i in range(len(results))]
     results.to_csv(csv_results,index=False)
     image_names = sorted(results['image_name'].unique())
-    for file in os.listdir(res_dir):
-        if file.endswith('.tif'):
-            os.remove(os.path.join(res_dir,file))
     for image_name in image_names:
-        cziCheck = False
+        #cziCheck = False
         detection_ids = results[results['image_name']==image_name]['detection_id'].values
         classes = results[results['image_name']==image_name]['class'].values
         str_rois = results[results['image_name']==image_name]['bbox'].values
         rois =[[int(coord) for coord in str_roi.strip('[]').split()] for str_roi in str_rois]
         if image_name.endswith('.czi'):
-            cziCheck = True
+            #cziCheck = True
             czi = AICSImage(os.path.join(img_dir,image_name))
             image = czi.get_image_data("CZYX", S=0, T=0, Z=0)
             image = np.squeeze(image)
-            image = np.moveaxis(image, 0, -1)
+            if len(image.shape) > 2:
+                image = np.moveaxis(image, 0, -1) #ensure 'YXC'
         else:
-            image = skimage.io.imread(os.path.join(img_dir,image_name))
-        if cziCheck:
-            for i in range(len(detection_ids)):
-                skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-4] + f'_{i:04d}_' + classes[i] + '.czi'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
-        else:
-            for i in range(len(detection_ids)):
-                skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-4] + f'_{i:04d}_' + classes[i] + '.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
+            image = skimage.io.imread(os.path.join(img_dir,image_name)) #read as 'YXC'
+        
+        for i in range(len(detection_ids)):
+            crop = image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]]
+            if len(crop.shape) == 2:
+                crop = np.expand_dims(crop, axis=2)
+            crop = np.moveaxis(crop, -1, 0)
+            output_path = os.path.join(res_dir,os.path.basename(image_name)[:-4] + f'_{i:04d}_' + classes[i] + '.tif')
+            tiff.imwrite(output_path,crop,photometric='minisblack') #save as 'CYX'
+
+
+def crop_from_csv_for_segment(csv_results,img_dir,res_dir):
+    """Crop ROIs in images from csv results to prepare for segmentation"""
+    print('Cropping for segmentation')
+    if os.path.exists(res_dir):
+        shutil.rmtree(res_dir)
+    os.makedirs(res_dir)
+    results = pd.read_csv(csv_results)
+    image_names = sorted(results['image_name'].unique())
+    for image_name in image_names:
+        detection_ids = results[results['image_name']==image_name]['detection_id'].values
+        classes = results[results['image_name']==image_name]['class'].values
+        str_rois = results[results['image_name']==image_name]['bbox'].values
+        rois =[[int(coord) for coord in str_roi.strip('[]').split()] for str_roi in str_rois]
+        image = skimage.io.imread(os.path.join(img_dir,image_name[:-3]+'tif'))
+        for i in range(len(detection_ids)):
+            skimage.io.imsave(os.path.join(res_dir,os.path.basename(image_name)[:-4] + f'_{i:04d}_' + classes[i] + '.tif'),image[rois[i][0]:rois[i][2],rois[i][1]:rois[i][3]])
 
 
 def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,modify_results=False,save_images=False):
@@ -107,10 +126,36 @@ def crop_from_results(image_path,image,img_res_dir,results,res_list,class_names,
                 cv2.imwrite(os.path.join(img_res_dir, os.path.basename(image_path)[:-3] + f'{i:04d}_' + class_name + '.tif'), cropped_img)
     return res_list
 
+def correct_crops(results_path, res_dir, masks):
+    """Correct the cropped images to keep only the main cell"""
+    results = pd.read_csv(results_path)
+    image_names = results['image_name'].unique()
+    for image_name in image_names:
+        img_results = results[results['image_name'] == image_name]
+        bboxes_str = img_results['bbox'].values
+        bboxes = [[int(coord) for coord in bbox.strip('[]').split()] for bbox in bboxes_str]
+        overlaps_idx = detect_overlap(bboxes)
+        overlaps = [list(img_results.iloc[[i,j]]['detection_id'].values) for i,j in overlaps_idx]
+    pass
+
+def apply_mask_to_imgs(img_dir,mask_dir):
+    """Apply masks to images to keep only the main cell"""
+    for img_name in os.listdir(img_dir):
+        img = skimage.io.imread(os.path.join(img_dir,img_name)) 
+        mask = skimage.io.imread(os.path.join(mask_dir,img_name))
+        img[mask==0] = 0
+        if len(img.shape) == 2:
+            img = np.expand_dims(img, axis=2)
+        img = np.moveaxis(img, -1, 0)
+        tiff.imwrite(os.path.join(img_dir,img_name),img,photometric='minisblack')
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--csv', type=str, help='Path to the csv file containing the results')
-    parser.add_argument('--img_dir', type=str, help='Path to the directory containing the images')
+    parser.add_argument('--img_dir', type=str, help='Path to the directory containing the original images')
     parser.add_argument('--res_dir', type=str, help='Path to the directory where the cropped images will be saved')
+    parser.add_argument('--segment', action='store_true', help='Whether to apply segmentation to the cropped images')
     args = parser.parse_args()
     crop_from_csv(args.csv, args.img_dir[:-5], args.res_dir)
+    if args.segment:
+        crop_from_csv_for_segment(args.csv, args.img_dir, args.res_dir+'_norm')
