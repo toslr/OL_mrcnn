@@ -109,13 +109,6 @@ def main():
     
     shutil.rmtree(IMG_DIR_NORM)
     apply_mask_to_imgs(IMG_DIR_CROP, MASK_DIR)
-
-        ## save mask and check for overlap
-
-        ## save individual masks for whole image
-        ## reconstruct whole mask
-        ## check for bbox overlap. 
-        ## correct mask
     
 
 

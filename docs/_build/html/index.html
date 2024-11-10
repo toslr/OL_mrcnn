@@ -156,22 +156,24 @@
 <h2>Analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h2>
 <p>Select the “Run MRCNN” option of the Fiji plugin. A window should pop.</p>
 <ul class="simple">
-<li><p>Select the task you want to achieve. <strong>The segmentation part is still under development. Please refer to the Python userguide for segmenting.</strong></p></li>
-<li><p>Choose the dataset you want to process. Make sure to select the <code class="docutils literal notranslate"><span class="pre">foldername_norm</span></code> folder.</p></li>
+<li><p>Select the task you want to achieve. Cropping will just give you the cropped images, while cropping and segmentation will give you the crops along with the segmentation masks. This last option allows to apply the mask on the individual crops, so that the noise around the cell is erased for better analysis.</p></li>
+<li><p>Choose the dataset you want to process. Make sure to select the <code class="docutils literal notranslate"><span class="pre">foldername_norm</span></code> folder (created in the preprocessing step).</p></li>
 <li><p>Select the weight file you want to use. Click Other to choose your own.</p></li>
 <li><p>(Optional) Adjust the confidence and non-maximum suppression thresholds. See next section for details.</p></li>
 <li><p>Choose a name for the task. It will be the name of the folder where the results will be saved in your directory.</p></li>
 <li><p>Choose the file format <strong>from your original dataset</strong>.</p></li>
-<li><p>Choose whether you want to visualize and edit the results.</p></li>
-<li><p>Choose if you want to save the crops.</p></li>
+<li><p>Choose whether you want to visualize and edit the results (recommended).</p></li>
+<li><p>Choose if you want to save the crops (recommended).</p></li>
 <li><p>Hit “Ok”.</p></li>
 </ul>
 <p>If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click ‘Finish’ to save the changes.</p>
-<p>The final results of your job will be saved next to your dataset folder, under the job name you provided.</p>
+<p>If you selected the segmentation option, this will prompt a second window to select the weight file for the second model. The <cite>singlecell_rgb.h5`model is recommended.</cite></p>
+<p>The final results of your job will be saved next to your dataset folder, under the job name you provided. You will find the crops and an csv file with the results of the analysis.</p>
 </section>
 </section>
 <section id="python-user-guide">
 <h1>Python User Guide<a class="headerlink" href="#python-user-guide" title="Link to this heading"></a></h1>
+<p>This part of the guide is for users who want to use the model in Python. The following steps will guide you through the installation and usage of the model. Specifically, see the section on how to retrain your own model.</p>
 <ul>
 <li><p>Add your dataset in the folder <code class="docutils literal notranslate"><span class="pre">/data</span></code></p></li>
 <li><p>OPTIONAL: preprocess your data with the <code class="docutils literal notranslate"><span class="pre">preprocessing.ipynb</span></code> notebook</p></li>
@@ -193,7 +195,7 @@
 <li><p>Run the notebook. The results will be saved in the folder <code class="docutils literal notranslate"><span class="pre">/results/results_name</span></code>.</p></li>
 </ul>
 <ul>
-<li><p>In this setup, we run a first model to crop and classify objects in the images. Then we run a second model on the cropped images to get a refined mask.</p></li>
+<li><p>In this setup, we run a first model to crop and classify objects in the images. Then we run a second model on the cropped images to get a refined mask, so that the noise around the cell is erased in the cropped image.</p></li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">model_pipeline.ipynb</span></code> notebook, configure the following parameters:</p>
 <blockquote>
 <div><ul class="simple">
@@ -222,7 +224,7 @@
 <ul class="simple">
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">/data</span></code> folder in the root directory.</p></li>
 <li><p>Inside the <code class="docutils literal notranslate"><span class="pre">/data</span></code> directory, put your images in a folder named <code class="docutils literal notranslate"><span class="pre">/imgs</span></code> and your binary masks in a folder named <code class="docutils literal notranslate"><span class="pre">/masks</span></code>. The name, size and format of the masks must match the images.</p></li>
-<li><p>In the <a href="#id1"><span class="problematic" id="id2">``</span></a>roi_labels_to_json.py``script, configure the <a href="#id3"><span class="problematic" id="id4">``</span></a>dir_path``in the <cite>main()</cite> function. Run in a terminal:</p></li>
+<li><p>In the <a href="#id1"><span class="problematic" id="id2">``</span></a>roi_labels_to_json.py``script, configure the <a href="#id3"><span class="problematic" id="id4">``</span></a>dir_path``in the <cite>main()</cite> function. Run the script in a terminal:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">roi_labels_to_json</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -234,9 +236,11 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">format_data</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
+<p>NB: your masks must be in the format (H,W). Make sure to have the objects in the masks as 0 values and the rest as non null values. Make sure to have all objects well delimited and non overlapping over each other.</p>
 </section>
 <section id="retraining-a-single-class-model">
 <h2>Retraining a single class model<a class="headerlink" href="#retraining-a-single-class-model" title="Link to this heading"></a></h2>
+<p>Retraining is possible on a local machine or on a cloud service. This tool is adapted to the Sherlock architecture as well.</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>In the <code class="docutils literal notranslate"><span class="pre">custom.py</span></code> script, configure the following:</dt><dd><ul>

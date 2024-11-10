@@ -83,23 +83,27 @@ Analysis
 ~~~~~~~~~
 Select the "Run MRCNN" option of the Fiji plugin. A window should pop.
 
-- Select the task you want to achieve. **The segmentation part is still under development. Please refer to the Python userguide for segmenting.**
-- Choose the dataset you want to process. Make sure to select the ``foldername_norm`` folder.
+- Select the task you want to achieve. Cropping will just give you the cropped images, while cropping and segmentation will give you the crops along with the segmentation masks. This last option allows to apply the mask on the individual crops, so that the noise around the cell is erased for better analysis.
+- Choose the dataset you want to process. Make sure to select the ``foldername_norm`` folder (created in the preprocessing step).
 - Select the weight file you want to use. Click Other to choose your own.
 - (Optional) Adjust the confidence and non-maximum suppression thresholds. See next section for details.
 - Choose a name for the task. It will be the name of the folder where the results will be saved in your directory. 
 - Choose the file format **from your original dataset**.
-- Choose whether you want to visualize and edit the results.
-- Choose if you want to save the crops.
+- Choose whether you want to visualize and edit the results (recommended).
+- Choose if you want to save the crops (recommended).
 - Hit "Ok".
 
 If the results editor has been selected, the images will be displayed along with the ROIs. You can navigate between the images, edit, add or delete the ROIs. Click 'Finish' to save the changes.
 
-The final results of your job will be saved next to your dataset folder, under the job name you provided.
+If you selected the segmentation option, this will prompt a second window to select the weight file for the second model. The `singlecell_rgb.h5`model is recommended.` 
+
+The final results of your job will be saved next to your dataset folder, under the job name you provided. You will find the crops and an csv file with the results of the analysis.
 
 
 Python User Guide
 =================
+
+This part of the guide is for users who want to use the model in Python. The following steps will guide you through the installation and usage of the model. Specifically, see the section on how to retrain your own model.
 
 Image cropping
 --------------
@@ -123,7 +127,7 @@ Image cropping
 Full pipeline
 -------------
 
-- In this setup, we run a first model to crop and classify objects in the images. Then we run a second model on the cropped images to get a refined mask.
+- In this setup, we run a first model to crop and classify objects in the images. Then we run a second model on the cropped images to get a refined mask, so that the noise around the cell is erased in the cropped image.
 
 - In the ``model_pipeline.ipynb`` notebook, configure the following parameters:
 
@@ -154,7 +158,7 @@ Data structure
 
 - Create a ``/data`` folder in the root directory.
 - Inside the ``/data`` directory, put your images in a folder named ``/imgs`` and your binary masks in a folder named ``/masks``. The name, size and format of the masks must match the images.
-- In the ``roi_labels_to_json.py``script, configure the ``dir_path``in the `main()` function. Run in a terminal:
+- In the ``roi_labels_to_json.py``script, configure the ``dir_path``in the `main()` function. Run the script in a terminal:
 
 .. code-block::
 
@@ -168,8 +172,12 @@ Data structure
    python format_data.py
 
 
+NB: your masks must be in the format (H,W). Make sure to have the objects in the masks as 0 values and the rest as non null values. Make sure to have all objects well delimited and non overlapping over each other.
+
 Retraining a single class model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Retraining is possible on a local machine or on a cloud service. This tool is adapted to the Sherlock architecture as well.
 
 - In the ``custom.py`` script, configure the following:
    - ``GRAYSCALE``: if True, the model will be trained on grayscale images. Default value is False.

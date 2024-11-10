@@ -6,7 +6,6 @@ from aicsimageio import AICSImage
 import argparse
 import shutil
 
-
 def czi_to_tiff(czi_folder,save_path,channels=None):
     """read czi files and save as tiff files"""
     if not os.path.exists(save_path):
@@ -35,7 +34,6 @@ def ometifs_to_tifs(dir_path, save_path,channels=None):
             img = skimage.io.imread(os.path.join(dir_path, file))
             for i in range(img.shape[0]):
                 skimage.io.imsave(os.path.join(save_path,file[:-8]+f'_{i}.tif'), img[i,...,channels])
-                #skimage.io.imsave(os.path.join(save_path, file[:-8] + f'_{i}.tif'), img[i])
 
 def tifs_to_tifs(dir_path,save_path,channels=None):
     """converts tifs to tifs with the correct channels"""
